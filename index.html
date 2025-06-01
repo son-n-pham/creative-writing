@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Image Description Generator</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				max-width: 800px;
+				margin: 0 auto;
+				padding: 20px;
+				background-color: #f5f5f5;
+			}
+			.container {
+				background-color: white;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+			.upload-section {
+				text-align: center;
+				padding: 20px;
+				border: 2px dashed #ccc;
+				border-radius: 4px;
+				margin-bottom: 20px;
+			}
+			#imagePreview {
+				max-width: 100%;
+				margin-top: 10px;
+				display: none;
+			}
+			#result {
+				white-space: pre-wrap;
+				padding: 15px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				margin-top: 20px;
+				display: none;
+			}
+			.loading {
+				display: none;
+				text-align: center;
+				margin: 20px 0;
+			}
+			button {
+				background-color: #4caf50;
+				color: white;
+				padding: 10px 20px;
+				border: none;
+				border-radius: 4px;
+				cursor: pointer;
+				font-size: 16px;
+			}
+			button:disabled {
+				background-color: #cccccc;
+				cursor: not-allowed;
+				cursor: not-allowed;
+			}
+			.api-key-section {
+				margin-bottom: 20px;
+			}
+			.api-key-section input {
+				width: 100%;
+				padding: 8px;
+				margin-top: 5px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Image Description Generator</h1>
+			<div class="api-key-section">
+				<label for="apiKey">Gemini API Key:</label>
+				<input
+					type="password"
+					id="apiKey"
+					placeholder="Enter your Gemini API key"
+				/>
+			</div>
+
+			<div class="upload-section">
+				<input type="file" id="imageInput" accept="image/*" />
+				<button id="generateBtn" disabled>Generate Description</button>
+				<img id="imagePreview" alt="Preview" />
+			</div>
+			<div class="loading" id="loading">Generating description...</div>
+			<div id="result"></div>
+		</div>
+
+		<script>
+			// Configuration
+			const GEMINI_API_KEY = "";
+
+			// DOM Elements
+			const apiKeyInput = document.getElementById("apiKey");
+			const imageInput = document.getElementById("imageInput");
+			const generateBtn = document.getElementById("generateBtn");
+			const imagePreview = document.getElementById("imagePreview");
+			const loading = document.getElementById("loading");
+			const result = document.getElementById("result");
+
+			// Event Listeners
+			imageInput.addEventListener("change", handleImageUpload);
+			generateBtn.addEventListener("click", generateDescription);
+
+			function handleImageUpload(event) {
+				const file = event.target.files[0];
+				if (file) {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						imagePreview.src = e.target.result;
+						imagePreview.style.display = "block";
+						generateBtn.disabled = false;
+					};
+					reader.readAsDataURL(file);
+				}
+			}
+
+			async function generateDescription() {
+				const apiKey = apiKeyInput.value.trim();
+				if (!apiKey) {
+					alert("Please enter your Gemini API key");
+					return;
+				}
+
+				loading.style.display = "block";
+				generateBtn.disabled = true;
+				result.style.display = "none";
+
+				const prompt = `
+Describe the image in details for using as writing prompt.
+
+- Look at the image and describe what you see in detail
+- State the main elements, colors, subjects, and any text visible in the image
+- Identify the writing task requirements shown in or implied by the image
+- Summarize how this image serves as a writing prompt
+`;
+
+				try {
+					const imageBase64 = imagePreview.src.split(",")[1];
+
+					const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+					const response = await fetch(apiUrl, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							contents: [
+								{
+									parts: [
+										{ text: prompt },
+										{
+											inline_data: {
+												mime_type: "image/jpeg",
+												data: imageBase64,
+											},
+										},
+									],
+								},
+							],
+							generationConfig: {
+								temperature: 1,
+								topP: 0.95,
+								topK: 40,
+								maxOutputTokens: 8192,
+								responseMimeType: "application/json",
+							},
+						}),
+					});
+
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("API Error:", errorData);
+						throw new Error(
+							`API error: ${errorData.error?.message || "Unknown error"}`
+						);
+					}
+
+					const data = await response.json();
+
+					if (data.candidates && data.candidates[0].content) {
+						const description = data.candidates[0].content.parts[0].text;
+						result.textContent = description;
+						result.style.display = "block";
+					} else {
+						throw new Error("Invalid response from API");
+					}
+				} catch (error) {
+					console.error("Error:", error);
+					alert(
+						`Error: ${
+							error.message || "Error generating description. Please try again."
+						}`
+					);
+				} finally {
+					loading.style.display = "none";
+					generateBtn.disabled = false;
+				}
+			}
+		</script>
+	</body>
+</html>
