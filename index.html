@@ -3,200 +3,14 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Creative Writing Image Prompt Generator</title>
+        <title>Creative Writing Adventure</title>
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
         <link rel="stylesheet" href="styles.css">
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 20px;
-                background-color: #f5f5f5;
-            }
-            .container {
-                background-color: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .upload-section {
-                text-align: center;
-                padding: 20px;
-                border: 2px dashed #ccc;
-                border-radius: 4px;
-                margin-bottom: 20px;
-            }
-            .upload-section label {
-                font-weight: bold;
-                display: block;
-                margin-bottom: 10px;
-            }
-            #imagePreview {
-                max-width: 100%;
-                margin-top: 10px;
-                display: none;
-            }
-            #result {
-                padding: 15px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                margin-top: 20px;
-                display: none;
-                line-height: 1.4;
-                background-color: #f9f9f9;
-            }
-            #result h1, #result h2, #result h3, #result h4, #result h5, #result h6 {
-                margin-top: 15px;
-                margin-bottom: 8px;
-                color: #333;
-            }
-            #result h1 { font-size: 1.8em; }
-            #result h2 { font-size: 1.5em; }
-            #result h3 { font-size: 1.3em; }
-            #result h4 { font-size: 1.1em; }
-            #result ul, #result ol {
-                margin: 8px 0;
-                padding-left: 20px;
-            }
-            #result li {
-                margin: 3px 0;
-            }
-            #result code {
-                background-color: #f4f4f4;
-                padding: 2px 4px;
-                border-radius: 3px;
-                font-family: 'Courier New', monospace;
-                font-size: 0.9em;
-            }
-            #result pre {
-                background-color: #f4f4f4;
-                padding: 15px;
-                border-radius: 4px;
-                overflow-x: auto;
-                margin: 10px 0;
-            }
-            #result pre code {
-                background: none;
-                padding: 0;
-            }
-            #result blockquote {
-                border-left: 4px solid #ddd;
-                margin: 15px 0;
-                padding-left: 15px;
-                color: #666;
-                font-style: italic;
-            }
-            #result strong {
-                font-weight: bold;
-                color: #333;
-            }
-            #result em {
-                font-style: italic;
-            }
-            #result p {
-                margin: 5px 0;
-            }
-            .loading {
-                display: none;
-                text-align: center;
-                margin: 20px 0;
-            }
-            button {
-                background-color: #4caf50;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 16px;
-            }
-            button:disabled {
-                background-color: #cccccc;
-                cursor: not-allowed;
-            }
-            .api-key-section {
-                margin-bottom: 20px;
-            }
-            .api-key-invalid {
-                border: 2px solid #c62828 !important;
-            }
-            .api-key-status {
-                font-size: 13px;
-                margin-left: 8px;
-            }
-            .api-key-status.valid { color: #2e7d32; }
-            .api-key-status.invalid { color: #c62828; }
-            .api-key-status.pending { color: #f57f17; }
-            .api-key-section input, .api-key-section select {
-                width: 100%;
-                padding: 8px;
-                margin-top: 5px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-            }
-            .api-key-section label {
-                font-weight: bold;
-                display: block;
-            }
-            .provider-section {
-                margin-bottom: 15px;
-            }
-            .model-section {
-                display: flex;
-                gap: 10px;
-                align-items: end;
-            }
-            .model-section div {
-                flex: 1;
-            }
-            .refresh-btn {
-                background-color: #2196f3;
-                white-space: nowrap;
-                height: 40px;
-                margin-top: 5px;
-            }
-            .model-info {
-                font-size: 12px;
-                color: #666;
-                margin-top: 5px;
-            }
-            .auto-refresh-status {
-                font-size: 11px;
-                color: #999;
-                text-align: right;
-                margin-top: 2px;
-                font-style: italic;
-            }
-            #userWritingSection {
-                margin-top: 40px;
-                padding-top: 20px;
-                border-top: 2px solid #eee;
-            }
-            #userWritingSection h2 {
-                color: #2196f3;
-                margin-bottom: 20px;
-            }
-            .free-toggle {
-                margin-bottom: 10px;
-            }
-            .help-text {
-                font-size: 12px;
-                color: #666;
-                margin-top: 4px;
-            }
-            .notice {
-                font-size: 12px;
-                color: #9a6700;
-                margin-top: 6px;
-                display: none;
-            }
-        </style>
     </head>
     <body>
         <div class="container wizard">
             <div class="wizard-header">
-                <h1>Creative Writing Image Prompt Generator</h1>
+                <h1>Creative Writing Adventure</h1>
                 <div class="steps-nav" aria-hidden="false">
                     <div class="step-pill" role="button" tabindex="0">1. API Key</div>
                     <div class="step-pill" role="button" tabindex="0">2. Image Prompt</div>
@@ -207,188 +21,133 @@
             </div>
 
             <div class="api-key-section step" data-step="1">
-                <label for="apiKey">OpenRouter API Key:</label>
+                <h2>Step 1: Your Secret Key</h2>
+                <label for="apiKey">Enter your OpenRouter API Key:</label>
                 <input
                     type="password"
                     id="apiKey"
-                    placeholder="Enter your OpenRouter API key"
+                    placeholder="Your secret key goes here!"
                 />
-                <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
-                    <label style="display:flex; align-items:center; gap:8px; margin:0;">
+                <div class="api-key-actions">
+                    <label>
                         <input type="checkbox" id="rememberApiKey" />
-                        <span style="font-size:13px;">Remember API key on this device</span>
+                        Remember me
                     </label>
-                    <button id="validateApiKeyBtn" style="background-color:#ff9800;">Validate Key</button>
-                    <button id="clearApiKeyBtn" style="background-color:#9e9e9e;">Clear Stored Key</button>
-                        <span id="apiKeyStatus" class="api-key-status pending" data-state="unknown">Not validated</span>
-                    <button id="resetAllBtn" style="background-color:#607d8b;">Reset All Selections</button>
+                    <button id="validateApiKeyBtn">Validate Key</button>
+                    <button id="clearApiKeyBtn">Clear Key</button>
+                    <span id="apiKeyStatus" class="api-key-status pending" data-state="unknown">Not validated</span>
+                    <button id="resetAllBtn">Reset All</button>
                 </div>
-                <p class="help-text" id="apiKeyDisclaimer" style="margin-top:6px; font-style:italic;">Storing your API key in local storage allows convenience but may expose it on shared devices. Only enable on trusted machines.</p>
+                <p class="help-text" id="apiKeyDisclaimer">Only save your key on a trusted computer!</p>
             </div>
-            <div id="imagePromptSection" class="step" data-step="2">
-				<div class="api-key-section">
-				                <div class="free-toggle">
-				                    <label for="freeOnlyToggle" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-				                        <input type="checkbox" id="freeOnlyToggle" aria-describedby="freeOnlyHelpImage" checked>
-				                        <span style="font-weight: bold;">Free models only</span>
-				                    </label>
-				                    <div id="freeOnlyHelpImage" class="help-text">Show only models and providers that are free to use.</div>
-				                </div>
-					<div class="provider-section">
-						<label for="providerSelect">Filter by Provider:</label>
-						<select id="providerSelect" style="width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-							<option value="">All Providers</option>
-						</select>
-					</div>
-					
-					<div class="model-section">
-						<div>
-							<label for="modelSelect">Select Model:</label>
-							<select id="modelSelect" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
-								<option value="">Loading models...</option>
-							</select>
-							<div id="modelInfo" class="model-info"></div>
-				                        <div id="imageNotice" class="notice" role="status" aria-live="polite"></div>
-							<div id="autoRefreshStatus" class="auto-refresh-status">Auto-refresh: every 5 min</div>
-						</div>
-						<button id="refreshModelsBtn" class="refresh-btn">Refresh Models</button>
-					</div>
-				</div>
 
-				<div class="upload-section">
-					<label for="imageInput">Upload Image (Optional):</label>
-					<input type="file" id="imageInput" accept="image/*" />
-					<p style="font-size: 14px; color: #666; margin: 10px 0;">
-						Upload an image to generate a detailed writing prompt, or generate text-only prompts without an image.
-					</p>
-					
-					<button id="generateBtn" disabled style="margin-top: 15px;">Generate Writing Prompt</button>
-					<img id="imagePreview" alt="Preview" />
-				</div>
-				
-				<div class="loading" id="loading">Generating description...</div>
-				<div id="result"></div>
-			</div>
+            <div id="imagePromptSection" class="step" data-step="2">
+                <h2>Step 2: Picture Your Story</h2>
+                <div class="model-selection-area">
+                    <label for="freeOnlyToggle">
+                        <input type="checkbox" id="freeOnlyToggle" checked>
+                        Show Free Models Only
+                    </label>
+                    <div class="model-selector">
+                        <select id="providerSelect">
+                            <option value="">All Providers</option>
+                        </select>
+                        <select id="modelSelect">
+                            <option value="">Loading models...</option>
+                        </select>
+                        <button id="refreshModelsBtn" class="refresh-btn">Refresh</button>
+                    </div>
+                    <div id="modelInfo" class="model-info"></div>
+                </div>
+
+                <div class="upload-section">
+                    <label for="imageInput">Upload an Image (or don't!):</label>
+                    <input type="file" id="imageInput" accept="image/*" />
+                    <p>Get a story idea from a picture, or just ask for a random one!</p>
+                    <button id="generateBtn" disabled>Create a Prompt!</button>
+                    <img id="imagePreview" alt="Preview" />
+                </div>
+
+                <div class="loading" id="loading">Thinking up a cool story idea...</div>
+                <div id="result" class="story-prompt"></div>
+            </div>
 
             <div id="userWritingSection" class="step" data-step="3">
-				<h2>Handwriting Text Extraction</h2>
-				<!-- This section is for inputing the writing of the user, the user can upload his writing and get LLM to extract the writing out into the resulted text box, or he can type or paste his writing into the text box -->
-				
-				<!-- Provider and Model Selection for Handwriting Extraction -->
-				<div class="api-key-section">
-				                <div class="free-toggle">
-				                    <label for="freeOnlyToggleHandwriting" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-				                        <input type="checkbox" id="freeOnlyToggleHandwriting" aria-describedby="freeOnlyHelpHand" checked>
-				                        <span style="font-weight: bold;">Free models only</span>
-				                    </label>
-				                    <div id="freeOnlyHelpHand" class="help-text">Show only models and providers that are free to use.</div>
-				                </div>
-					<div class="provider-section">
-						<label for="handwritingProviderSelect">Filter by Provider:</label>
-						<select id="handwritingProviderSelect" style="width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-							<option value="">All Providers</option>
-						</select>
-					</div>
-					
-					<div class="model-section">
-						<div>
-							<label for="handwritingModelSelect">Select Model (Vision Models Only):</label>
-							<select id="handwritingModelSelect" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;">
-								<option value="">Loading models...</option>
-							</select>
-							<div id="handwritingModelInfo" class="model-info"></div>
-				                        <div id="handwritingNotice" class="notice" role="status" aria-live="polite"></div>
-						</div>
-						<button id="refreshHandwritingModelsBtn" class="refresh-btn">Refresh Models</button>
-					</div>
-				</div>
+                <h2>Step 3: Write Your Masterpiece</h2>
+                <div class="model-selection-area">
+                    <label for="freeOnlyToggleHandwriting">
+                        <input type="checkbox" id="freeOnlyToggleHandwriting" checked>
+                        Show Free Models Only
+                    </label>
+                    <div class="model-selector">
+                        <select id="handwritingProviderSelect">
+                            <option value="">All Providers</option>
+                        </select>
+                        <select id="handwritingModelSelect">
+                            <option value="">Loading models...</option>
+                        </select>
+                        <button id="refreshHandwritingModelsBtn" class="refresh-btn">Refresh</button>
+                    </div>
+                    <div id="handwritingModelInfo" class="model-info"></div>
+                </div>
 
-				<!-- Toggle for Handwriting Upload -->
-				<div style="margin-bottom: 15px;">
-					<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-						<input type="checkbox" id="handwritingToggle" checked>
-						<span style="font-weight: bold;">Enable Handwriting Screenshot Upload</span>
-					</label>
-				</div>
+                <div class="writing-area">
+                    <label>
+                        <input type="checkbox" id="handwritingToggle" checked>
+                        Upload a picture of your handwriting
+                    </label>
+                    <div class="upload-section" id="handwritingUploadSection">
+                        <input type="file" id="handwritingInput" accept="image/*" />
+                        <p>Let the AI read your handwriting!</p>
+                        <img id="handwritingPreview" alt="Handwriting Preview" />
+                        <button id="extractTextBtn" disabled>Turn Writing into Text</button>
+                    </div>
+                    <textarea id="extractedText" rows="10" placeholder="Your story will appear here... or you can type it!"></textarea>
+                </div>
+                <div class="loading" id="handwritingLoading">Reading your handwriting...</div>
+            </div>
 
-				<!-- The user is writing, add the section here for them to upload the screenshot of their hand writing -->
-				<div class="upload-section" id="handwritingUploadSection">
-					<label for="handwritingInput">Upload Handwriting Screenshot:</label>
-					<input type="file" id="handwritingInput" accept="image/*" />
-					<p style="font-size: 14px; color: #666; margin: 10px 0;">
-						Upload a screenshot of your handwriting to extract text using AI.
-					</p>
-					<img id="handwritingPreview" style="max-width: 100%; margin-top: 10px; display: none;" alt="Handwriting Preview" />
-					<button id="extractTextBtn" disabled style="margin-top: 15px;">Extract Text from Handwriting</button>
-				</div>
-
-				<!-- This is the section which handwriting is extracted into text by LLM, this allow the user to manually edit the extracted text to ensure it is what they wrote -->
-				<div class="container">
-					<h3>Extracted Handwriting Text (Editable)</h3>
-					<textarea id="extractedText" rows="8" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 4px;" placeholder="Extracted text will appear here, or you can type/paste your text directly..."></textarea>
-				</div>
-				
-				<div class="loading" id="handwritingLoading" style="display: none;">Extracting text from handwriting...</div>
-			</div>
-
-            <!-- Grading Section -->
             <div class="container step" data-step="4">
-				<h2>📝 Writing Assessment & Grading</h2>
-				<p><strong>Purpose:</strong> Comprehensive evaluation following GATE writing assessment standards (25-minute essays, 0-25 marks)</p>
-				
-				<!-- Writing Prompt Section -->
-				<div style="margin-bottom: 20px;">
-					<label for="writingPrompt" style="font-weight: bold; display: block; margin-bottom: 5px;">Writing Prompt: <span style="color: #28a745; font-size: 0.9em;">(Auto-populated from image prompt above)</span></label>
-					<textarea id="writingPrompt" rows="4" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="Generate an image prompt above to auto-populate this field, or enter manually..."></textarea>
-					<button id="useImagePromptBtn" style="margin-top: 10px; padding: 8px 15px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Use Current Image Prompt</button>
-				</div>
+                <h2>Step 4: Get Your Grade!</h2>
+                <div class="grading-area">
+                    <div class="prompt-display">
+                        <h3>Your Prompt:</h3>
+                        <textarea id="writingPrompt" rows="4" placeholder="Your story prompt will show up here."></textarea>
+                        <button id="useImagePromptBtn">Use Current Prompt</button>
+                    </div>
+                    <div class="writing-display">
+                        <h3>Your Story:</h3>
+                        <textarea id="studentWriting" rows="12" placeholder="Your story will show up here."></textarea>
+                        <button id="useExtractedBtn">Use My Story</button>
+                    </div>
+                </div>
 
-				<!-- Student Writing Section -->
-				<div style="margin-bottom: 20px;">
-					<label for="studentWriting" style="font-weight: bold; display: block; margin-bottom: 5px;">Student Writing: <span style="color: #007bff; font-size: 0.9em;">(Auto-populated from extracted text above)</span></label>
-					<textarea id="studentWriting" rows="12" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="Extract handwriting text above to auto-populate this field, or paste the student's writing here manually..."></textarea>
-					<button id="useExtractedBtn" style="margin-top: 10px; padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">📝 Use Current Extracted Text</button>
-				</div>
+                <div class="model-selection-area">
+                    <label for="freeOnlyToggleGrading">
+                        <input type="checkbox" id="freeOnlyToggleGrading" checked>
+                        Show Free Models Only
+                    </label>
+                    <div class="model-selector">
+                        <select id="gradingProviderSelect">
+                            <option value="">Select Provider</option>
+                        </select>
+                        <select id="gradingModelSelect" disabled>
+                            <option value="">Select Model</option>
+                        </select>
+                        <button id="refreshGradingModelsBtn" class="refresh-btn">Refresh</button>
+                    </div>
+                    <div id="gradingModelInfo" class="model-info"></div>
+                </div>
 
-				<!-- Grading Model Selection -->
-				<div style="margin-bottom: 20px;">
-					<label style="font-weight: bold; display: block; margin-bottom: 10px;">AI Model for Grading:</label>
-				                <div class="free-toggle">
-				                    <label for="freeOnlyToggleGrading" style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
-				                        <input type="checkbox" id="freeOnlyToggleGrading" aria-describedby="freeOnlyHelpGrading" checked>
-				                        <span style="font-weight: bold;">Free models only</span>
-				                    </label>
-				                    <div id="freeOnlyHelpGrading" class="help-text">Show only models and providers that are free to use.</div>
-				                </div>
-					<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-						<select id="gradingProviderSelect" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; min-width: 150px;">
-							<option value="">Select Provider</option>
-						</select>
-						<select id="gradingModelSelect" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; min-width: 200px;" disabled>
-							<option value="">Select Model</option>
-						</select>
-						<button id="refreshGradingModelsBtn" style="padding: 8px 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄</button>
-					</div>
-					<div id="gradingModelInfo" style="margin-top: 5px; font-size: 0.9em; color: #666;"></div>
-				                <div id="gradingNotice" class="notice" role="status" aria-live="polite"></div>
-				</div>
+                <button id="gradeWritingBtn" disabled>Grade My Story!</button>
+                <div class="loading" id="gradingLoading">Checking your amazing work...</div>
+            </div>
 
-				<!-- Grade Button -->
-				<button id="gradeWritingBtn" disabled style="padding: 12px 24px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">🎯 Grade Writing</button>
-				
-				<div class="loading" id="gradingLoading" style="display: none;">Evaluating student writing using comprehensive rubric...</div>
-			</div>
-
-			<!-- Grading Results Section -->
-			<div class="container" id="gradingResults" style="display: none;">
-				<h2>📊 Grading Results</h2>
-				<div id="gradingOutput" style="padding: 15px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9; line-height: 1.6;"></div>
-				
-				<!-- Download Grading Report -->
-				<div style="margin-top: 20px; text-align: center;">
-					<button id="downloadGradingBtn" style="padding: 10px 20px; background-color: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">📥 Download Grading Report</button>
-				</div>
-			</div>
+            <div class="container" id="gradingResults" style="display: none;">
+                <h2>Your Report Card!</h2>
+                <div id="gradingOutput"></div>
+                <button id="downloadGradingBtn">Download Report</button>
+            </div>
 
         <script src="app.js"></script>
         <div class="wizard-footer container" aria-hidden="false">
@@ -396,12 +155,11 @@
                 <button id="wizardBack" class="secondary" disabled>◀ Back</button>
                 <button id="wizardNext" class="primary">Next ▶</button>
             </div>
-            <div style="font-size:13px;color:#666;">Tip: use Alt+← / Alt+→ to navigate steps</div>
+            <div class="shortcut-tip">Tip: use Alt+← / Alt+→ to go back and next!</div>
         </div>
 
         <script>
-            // Configuration
-
+            const DEFAULT_MODEL = 'google/gemini-flash-1.5:free';
             // DOM Elements
             const apiKeyInput = document.getElementById("apiKey");
             const rememberApiKey = document.getElementById("rememberApiKey");
@@ -412,7 +170,6 @@
             const providerSelect = document.getElementById("providerSelect");
             const modelSelect = document.getElementById("modelSelect");
             const modelInfo = document.getElementById("modelInfo");
-            const autoRefreshStatus = document.getElementById("autoRefreshStatus");
             const refreshModelsBtn = document.getElementById("refreshModelsBtn");
             const imageInput = document.getElementById("imageInput");
             const generateBtn = document.getElementById("generateBtn");
@@ -420,7 +177,6 @@
             const loading = document.getElementById("loading");
             const result = document.getElementById("result");
             
-            // Handwriting section DOM elements
             const handwritingProviderSelect = document.getElementById("handwritingProviderSelect");
             const handwritingModelSelect = document.getElementById("handwritingModelSelect");
             const handwritingModelInfo = document.getElementById("handwritingModelInfo");
@@ -433,7 +189,6 @@
             const extractedText = document.getElementById("extractedText");
             const handwritingLoading = document.getElementById("handwritingLoading");
 
-            // Grading section DOM elements
             const writingPrompt = document.getElementById("writingPrompt");
             const useImagePromptBtn = document.getElementById("useImagePromptBtn");
             const studentWriting = document.getElementById("studentWriting");
@@ -447,1249 +202,214 @@
             const gradingResults = document.getElementById("gradingResults");
             const gradingOutput = document.getElementById("gradingOutput");
             const downloadGradingBtn = document.getElementById("downloadGradingBtn");
+
             const freeOnlyToggle = document.getElementById("freeOnlyToggle");
             const freeOnlyToggleHandwriting = document.getElementById("freeOnlyToggleHandwriting");
             const freeOnlyToggleGrading = document.getElementById("freeOnlyToggleGrading");
-            const imageNotice = document.getElementById("imageNotice");
-            const handwritingNotice = document.getElementById("handwritingNotice");
-            const gradingNotice = document.getElementById("gradingNotice");
 
-            // Global variables
             let availableModels = [];
             let availableProviders = [];
-            let selectedProvider = "";
-            let lastModelRefresh = 0;
-            let modelRefreshInterval = null;
-            let isPageVisible = true;
-            let currentImagePrompt = ""; // Store the generated image prompt for grading
-            let freeOnly = (sessionStorage.getItem('freeOnly') === null) ? true : sessionStorage.getItem('freeOnly') === 'true';
-            let lastValidApiKey = localStorage.getItem('last_valid_api_key') || '';
-            let isRestoringSelections = false;
-            let isClearingSelections = false;
+            let currentImagePrompt = "";
+            let freeOnly = true;
 
-            // Storage key constants
-            const STORAGE_KEYS = {
-                imageProvider: 'image_provider',
-                imageModel: 'image_model',
-                handwritingProvider: 'handwriting_provider',
-                handwritingModel: 'handwriting_model',
-                gradingProvider: 'grading_provider',
-                gradingModel: 'grading_model',
-                lastValidApiKey: 'last_valid_api_key'
-            };
-
-            function persistSelections() {
-                if (isRestoringSelections || isClearingSelections) return;
-                try {
-                    if (providerSelect?.value) localStorage.setItem(STORAGE_KEYS.imageProvider, providerSelect.value);
-                    if (modelSelect?.value) localStorage.setItem(STORAGE_KEYS.imageModel, modelSelect.value);
-                    if (handwritingProviderSelect?.value) localStorage.setItem(STORAGE_KEYS.handwritingProvider, handwritingProviderSelect.value);
-                    if (handwritingModelSelect?.value) localStorage.setItem(STORAGE_KEYS.handwritingModel, handwritingModelSelect.value);
-                    if (gradingProviderSelect?.value) localStorage.setItem(STORAGE_KEYS.gradingProvider, gradingProviderSelect.value);
-                    if (gradingModelSelect?.value) localStorage.setItem(STORAGE_KEYS.gradingModel, gradingModelSelect.value);
-                } catch (e) { /* silent */ }
-            }
-
-            function restoreSelections() {
-                isRestoringSelections = true;
-                try {
-                    const imgProv = localStorage.getItem(STORAGE_KEYS.imageProvider) || '';
-                    const imgModel = localStorage.getItem(STORAGE_KEYS.imageModel) || '';
-                    const handProv = localStorage.getItem(STORAGE_KEYS.handwritingProvider) || '';
-                    const handModel = localStorage.getItem(STORAGE_KEYS.handwritingModel) || '';
-                    const gradeProv = localStorage.getItem(STORAGE_KEYS.gradingProvider) || '';
-                    const gradeModel = localStorage.getItem(STORAGE_KEYS.gradingModel) || '';
-
-                    if (imgProv) providerSelect.value = imgProv;
-                    if (handProv) handwritingProviderSelect.value = handProv;
-                    if (gradeProv) gradingProviderSelect.value = gradeProv;
-
-                    // Rebuild dependent dropdowns after setting providers
-                    updateModelDropdown();
-                    updateHandwritingModelDropdown();
-                    updateGradingModelDropdown();
-
-                    // Apply model selections if still available
-                    if (imgModel && Array.from(modelSelect.options).some(o => o.value === imgModel)) modelSelect.value = imgModel;
-                    if (handModel && Array.from(handwritingModelSelect.options).some(o => o.value === handModel)) handwritingModelSelect.value = handModel;
-                    if (gradeModel && Array.from(gradingModelSelect.options).some(o => o.value === gradeModel)) gradingModelSelect.value = gradeModel;
-
-                    updateModelInfo();
-                    updateHandwritingModelInfo();
-                    updateGradingModelInfo?.();
-                    updateGenerateButton();
-                    updateExtractButton();
-                    updateGradeButton();
-                } catch (e) { /* silent */ }
-                isRestoringSelections = false;
-            }
-
-            function clearSelectionStorage() {
-                try {
-                    [STORAGE_KEYS.imageProvider, STORAGE_KEYS.imageModel, STORAGE_KEYS.handwritingProvider, STORAGE_KEYS.handwritingModel, STORAGE_KEYS.gradingProvider, STORAGE_KEYS.gradingModel].forEach(k => localStorage.removeItem(k));
-                } catch (e) {}
-            }
-
-            function resetAllSelections(showNotice = true) {
-                isClearingSelections = true;
-                clearSelectionStorage();
-                currentImagePrompt = '';
-                // Reset free-only to true
-                onFreeOnlyChange(true);
-                // Clear dropdown selections
-                providerSelect.value = '';
-                modelSelect.value = '';
-                handwritingProviderSelect.value = '';
-                handwritingModelSelect.value = '';
-                gradingProviderSelect.value = '';
-                gradingModelSelect.value = '';
-                // Clear text areas
-                writingPrompt.value = '';
-                studentWriting.value = '';
-                extractedText.value = '';
-                // Hide results
-                result.style.display = 'none';
-                gradingResults.style.display = 'none';
-                // Update buttons
-                updateGenerateButton();
-                updateExtractButton();
-                updateGradeButton();
-                if (showNotice) {
-                    showNotice(handwritingNotice, 'All selections have been reset.');
-                }
-                isClearingSelections = false;
-            }
-
-            function clearSelectionsOnApiKeyChange() {
-                resetAllSelections(false);
-            }
-
-            // Configuration for auto-refresh
-            const MODEL_REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
-            const MODEL_CACHE_DURATION = 2 * 60 * 1000; // 2 minutes minimum between refreshes
-
-            // Event Listeners
-            imageInput.addEventListener("change", handleImageUpload);
-            generateBtn.addEventListener("click", generateDescription);
-            apiKeyInput.addEventListener("input", () => {
-                scheduleApiKeyValidation();
-                updateGenerateButton();
-                updateExtractButton();
-                updateGradeButton();
-                // If user modifies API key away from last valid key, clear selections
-                const currentKey = apiKeyInput.value.trim();
-                if (lastValidApiKey && currentKey && currentKey !== lastValidApiKey) {
-                    clearSelectionsOnApiKeyChange();
-                }
-            });
-            if (rememberApiKey) rememberApiKey.addEventListener('change', onRememberToggle);
-            if (validateApiKeyBtn) validateApiKeyBtn.addEventListener('click', () => validateApiKey({force:true}));
-            if (clearApiKeyBtn) clearApiKeyBtn.addEventListener('click', clearStoredApiKey);
-            if (resetAllBtn) resetAllBtn.addEventListener('click', () => resetAllSelections(true));
-            refreshModelsBtn.addEventListener("click", () => loadModels(true)); // Force refresh
-            providerSelect.addEventListener("change", handleProviderChange);
-            modelSelect.addEventListener("change", updateModelInfo);
-            modelSelect.addEventListener("focus", handleModelSelectFocus);
-            providerSelect.addEventListener('change', persistSelections);
-            modelSelect.addEventListener('change', persistSelections);
-            
-            // Handwriting section event listeners
-            handwritingToggle.addEventListener("change", handleHandwritingToggle);
-            handwritingInput.addEventListener("change", handleHandwritingUpload);
-            extractTextBtn.addEventListener("click", extractTextFromHandwriting);
-            refreshHandwritingModelsBtn.addEventListener("click", () => loadModels(true));
-            handwritingProviderSelect.addEventListener("change", handleHandwritingProviderChange);
-            handwritingModelSelect.addEventListener("change", updateHandwritingModelInfo);
-            handwritingModelSelect.addEventListener("focus", handleModelSelectFocus);
-            handwritingProviderSelect.addEventListener('change', persistSelections);
-            handwritingModelSelect.addEventListener('change', persistSelections);
-            apiKeyInput.addEventListener("input", updateExtractButton);
-
-            // Grading section event listeners
-            useImagePromptBtn.addEventListener("click", useCurrentImagePrompt);
-            useExtractedBtn.addEventListener("click", useExtractedText);
-            extractedText.addEventListener("input", autoSyncExtractedText); // Auto-sync when manually edited
-            gradingProviderSelect.addEventListener("change", handleGradingProviderChange);
-            gradingModelSelect.addEventListener("change", updateGradingModelInfo);
-            gradingModelSelect.addEventListener("focus", handleModelSelectFocus);
-            gradingProviderSelect.addEventListener('change', persistSelections);
-            gradingModelSelect.addEventListener('change', persistSelections);
-            refreshGradingModelsBtn.addEventListener("click", () => loadModels(true));
-            gradeWritingBtn.addEventListener("click", gradeStudentWriting);
-            downloadGradingBtn.addEventListener("click", downloadGradingReport);
-            apiKeyInput.addEventListener("input", updateGradeButton);
-            writingPrompt.addEventListener("input", updateGradeButton);
-            studentWriting.addEventListener("input", updateGradeButton);
-
-            // Free model toggle event listeners
-            if (freeOnlyToggle) freeOnlyToggle.addEventListener("change", onFreeOnlyChange);
-            if (freeOnlyToggleHandwriting) freeOnlyToggleHandwriting.addEventListener("change", onFreeOnlyChange);
-            if (freeOnlyToggleGrading) freeOnlyToggleGrading.addEventListener("change", onFreeOnlyChange);
-
-            // Page visibility change detection
-            document.addEventListener("visibilitychange", handleVisibilityChange);
-
-            // Load models on page load and start auto-refresh
-            window.addEventListener("load", () => {
-                // Initialize free-only toggles from session (defaults to true)
-                try {
-                    [freeOnlyToggle, freeOnlyToggleHandwriting, freeOnlyToggleGrading].forEach(cb => { if (cb) cb.checked = freeOnly; });
-                } catch {}
-                // Restore remembered API key preference and value
-                try {
-                    const remembered = localStorage.getItem('openrouter_api_key_remember') === 'true';
-                    if (rememberApiKey) rememberApiKey.checked = remembered;
-                    if (remembered) {
-                        const saved = localStorage.getItem('openrouter_api_key');
-                        if (saved) {
-                            apiKeyInput.value = saved;
-                            // validate silently on load
-                            validateApiKey({silent:true, initial:true});
-                        }
-                    }
-                } catch (e) {}
-                loadModels();
-                startAutoRefresh();
-                // Initialize handwriting section state
-                handleHandwritingToggle();
-                // Attempt to restore selections after initial load
-                setTimeout(() => restoreSelections(), 300);
-            });
-
-            // Clean up interval when page is unloaded
-            window.addEventListener("beforeunload", () => {
-                if (modelRefreshInterval) {
-                    clearInterval(modelRefreshInterval);
-                }
-            });
-            
-            function updateGenerateButton() {
-                const apiKey = apiKeyInput.value.trim();
-                const hasSelectedModel = modelSelect.value && modelSelect.value !== "";
-                const keyValid = apiKeyStatus?.dataset?.state === 'valid';
-                generateBtn.disabled = !apiKey || !hasSelectedModel || !keyValid;
-                
-                // Update button text to show what's missing
-                if (!apiKey && !hasSelectedModel) {
-                    generateBtn.textContent = "Enter API Key & Select Model";
-                } else if (!apiKey) {
-                    generateBtn.textContent = "Enter API Key";
-                } else if (!hasSelectedModel) {
-                    generateBtn.textContent = "Select Model";
-                } else {
-                    generateBtn.textContent = "Generate Writing Prompt";
-                }
-            }
-
-            function updateExtractButton() {
-                const apiKey = apiKeyInput.value.trim();
-                const hasSelectedModel = handwritingModelSelect.value && handwritingModelSelect.value !== "";
-                const hasImage = handwritingInput.files && handwritingInput.files[0];
-                const keyValid = apiKeyStatus?.dataset?.state === 'valid';
-                extractTextBtn.disabled = !apiKey || !hasSelectedModel || !hasImage || !keyValid;
-            }
-
-            function updateModelInfo() {
-                const selectedModelId = modelSelect.value;
-                const selectedModel = availableModels.find(model => model.id === selectedModelId);
-                
-                if (selectedModel) {
-                    const contextLength = selectedModel.context_length ? `${selectedModel.context_length.toLocaleString()} tokens` : 'Unknown';
-                    const modalities = selectedModel.architecture?.input_modalities?.join(', ') || 'text';
-                    modelInfo.textContent = `Context: ${contextLength} | Input: ${modalities}`;
-                } else {
-                    modelInfo.textContent = '';
-                }
-                updateGenerateButton();
-            }
-
-            function updateHandwritingModelInfo() {
-                const selectedModelId = handwritingModelSelect.value;
-                const selectedModel = availableModels.find(model => model.id === selectedModelId);
-                
-                if (selectedModel) {
-                    const contextLength = selectedModel.context_length ? `${selectedModel.context_length.toLocaleString()} tokens` : 'Unknown';
-                    const modalities = selectedModel.architecture?.input_modalities?.join(', ') || 'text';
-                    handwritingModelInfo.textContent = `Context: ${contextLength} | Input: ${modalities}`;
-                } else {
-                    handwritingModelInfo.textContent = '';
-                }
-                updateExtractButton();
-            }
-
-            // Helpers
             function isFreeModel(model) {
                 const p = model?.pricing;
-                // Treat strictly 0 as free when present
-                const promptFree = p && (p.prompt === 0 || p.prompt === "0");
-                const completionFree = p && (p.completion === 0 || p.completion === "0");
-                return !!(promptFree && completionFree);
+                return p && (p.prompt === 0 || p.prompt === "0") && (p.completion === 0 || p.completion === "0");
             }
 
-            function supportsText(model) {
-                const modalities = model?.architecture?.input_modalities;
-                // If not specified, assume text is supported
-                if (!Array.isArray(modalities)) return true;
-                return modalities.includes('text');
+            function updateAllDropdowns() {
+                updateProviderDropdown(providerSelect, m => true);
+                updateModelDropdown(modelSelect, providerSelect.value, m => true);
+                updateProviderDropdown(handwritingProviderSelect, m => m.architecture?.input_modalities?.includes('image'));
+                updateModelDropdown(handwritingModelSelect, handwritingProviderSelect.value, m => m.architecture?.input_modalities?.includes('image'));
+                updateProviderDropdown(gradingProviderSelect, m => m.architecture?.input_modalities?.includes('text'));
+                updateModelDropdown(gradingModelSelect, gradingProviderSelect.value, m => m.architecture?.input_modalities?.includes('text'));
+                setDefaultModels();
             }
 
-            function showNotice(el, text) {
-                const element = typeof el === 'string' ? document.getElementById(el) : el;
-                if (!element) return;
-                element.textContent = text || '';
-                if (text) {
-                    element.style.display = 'block';
-                    setTimeout(() => {
-                        if (element.textContent === text) {
-                            element.textContent = '';
-                            element.style.display = 'none';
-                        }
-                    }, 4000);
-                }
-            }
-
-            function providerHasFreeModelFor(provider, predicate) {
-                return availableModels.some(m => m.id.startsWith(provider + '/') && (!predicate || predicate(m)) && isFreeModel(m));
-            }
-
-            function onFreeOnlyChange(e) {
-                const value = typeof e === 'boolean' ? e : !!e.target.checked;
-                freeOnly = value;
-                try { sessionStorage.setItem('freeOnly', String(value)); } catch {}
-                if (freeOnlyToggle) freeOnlyToggle.checked = value;
-                if (freeOnlyToggleHandwriting) freeOnlyToggleHandwriting.checked = value;
-                if (freeOnlyToggleGrading) freeOnlyToggleGrading.checked = value;
-
-                updateProviderDropdown();
-                updateModelDropdown();
-                updateHandwritingProviderDropdown();
-                updateHandwritingModelDropdown();
-                updateGradingProviderDropdown();
-                updateGradingModelDropdown();
+            function onFreeOnlyChange() {
+                freeOnly = this.checked;
+                [freeOnlyToggle, freeOnlyToggleHandwriting, freeOnlyToggleGrading].forEach(toggle => toggle.checked = freeOnly);
+                updateAllDropdowns();
             }
 
             async function loadModels(forceRefresh = false) {
-                // Check if we should skip refresh (unless forced)
-                const now = Date.now();
-                if (!forceRefresh && (now - lastModelRefresh) < MODEL_CACHE_DURATION) {
-                    console.log('Skipping model refresh - too recent');
-                    return;
-                }
-
-                refreshModelsBtn.disabled = true;
-                refreshModelsBtn.textContent = "Loading...";
-                
-                // Only show "Loading models..." if we don't have models already
-                if (availableModels.length === 0) {
-                    modelSelect.innerHTML = '<option value="">Loading models...</option>';
-                }
-                
                 try {
                     const response = await fetch('https://openrouter.ai/api/v1/models');
-                    
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch models: ${response.status}`);
-                    }
-                    
                     const data = await response.json();
-                    
-                    // Use ALL models for downstream filtering (grading, handwriting, etc.)
-                    const allModels = Array.isArray(data.data) ? data.data.slice() : [];
-                    // Sort by name for better UX
-                    allModels.sort((a, b) => (a.name || a.id).localeCompare(b.name || a.id));
-
-                    // Extract providers from all models
-                    const providers = new Set();
-                    allModels.forEach(model => {
-                        const provider = model.id.split('/')[0];
-                        if (provider) providers.add(provider);
-                    });
-                    
-                    // Store for later use
-                    availableModels = allModels;
+                    availableModels = data.data.sort((a, b) => (a.name || a.id).localeCompare(b.name || a.id));
+                    const providers = new Set(availableModels.map(m => m.id.split('/')[0]));
                     availableProviders = Array.from(providers).sort();
-                    lastModelRefresh = Date.now();
-                    
-                    // Update provider dropdown
-                    updateProviderDropdown();
-                    updateHandwritingProviderDropdown();
-                    updateGradingProviderDropdown();
-                    
-                    // Update model dropdown based on current provider filter
-                    updateModelDropdown();
-                    updateHandwritingModelDropdown();
-                    updateGradingModelDropdown();
-                    
-                    console.log(`Loaded ${availableModels.length} models from ${availableProviders.length} providers at ${new Date().toLocaleTimeString()}`);
-                    updateAutoRefreshStatus();
-                    
+                    updateAllDropdowns();
                 } catch (error) {
                     console.error('Error loading models:', error);
-                    
-                    // Only show error if we don't have any models cached
-                    if (availableModels.length === 0) {
-                        modelSelect.innerHTML = '<option value="">Error loading models</option>';
-                        alert(`Error loading models: ${error.message}`);
-                    } else {
-                        console.log('Using cached models due to refresh error');
-                        // Refresh the dropdowns with cached data
-                        updateProviderDropdown();
-                        updateHandwritingProviderDropdown();
-                        updateGradingProviderDropdown();
-                        updateModelDropdown();
-                        updateHandwritingModelDropdown();
-                        updateGradingModelDropdown();
-                    }
-                } finally {
-                    refreshModelsBtn.disabled = false;
-                    refreshModelsBtn.textContent = "Refresh Models";
-                    updateGenerateButton();
-                    updateExtractButton();
                 }
             }
 
-            function updateProviderDropdown() {
-                const currentSelection = providerSelect.value;
-                providerSelect.innerHTML = '<option value="">All Providers</option>';
-
-                let providersToShow = availableProviders.slice();
+            function updateProviderDropdown(selectElement, modelFilter) {
+                const currentSelection = selectElement.value;
+                selectElement.innerHTML = '<option value="">All Providers</option>';
+                let providersToShow = availableProviders;
                 if (freeOnly) {
-                    providersToShow = providersToShow.filter(p => providerHasFreeModelFor(p, () => true));
+                    providersToShow = availableProviders.filter(p => availableModels.some(m => m.id.startsWith(p + '/') && isFreeModel(m) && modelFilter(m)));
                 }
-
-                if (providersToShow.length === 0) {
-                    providerSelect.disabled = true;
-                    modelSelect.disabled = true;
-                    providerSelect.innerHTML = '<option value="">No free providers available</option>';
-                    modelSelect.innerHTML = '<option value="">No free models available</option>';
-                    showNotice(imageNotice, 'No free models available.');
-                    return;
-                } else {
-                    providerSelect.disabled = false;
-                }
-
                 providersToShow.forEach(provider => {
                     const option = document.createElement('option');
                     option.value = provider;
-                    const freeBadge = (freeOnly || providerHasFreeModelFor(provider, () => true)) ? ' — Free' : '';
-                    option.textContent = provider.charAt(0).toUpperCase() + provider.slice(1) + freeBadge;
-                    providerSelect.appendChild(option);
+                    option.textContent = provider.charAt(0).toUpperCase() + provider.slice(1);
+                    selectElement.appendChild(option);
                 });
-                
-                // Restore previous selection if it still exists
                 if (providersToShow.includes(currentSelection)) {
-                    providerSelect.value = currentSelection;
-                    selectedProvider = currentSelection;
-                } else if (currentSelection) {
-                    selectedProvider = "";
-                    providerSelect.value = "";
-                    showNotice(imageNotice, 'Previous provider selection is not available with current filters.');
-                } else {
-                    selectedProvider = "";
+                    selectElement.value = currentSelection;
                 }
             }
 
-            function updateHandwritingProviderDropdown() {
-                // Filter providers that have vision models
-                const visionProviders = new Set();
-                availableModels.forEach(model => {
-                    if (model.architecture?.input_modalities?.includes('image')) {
-                        const provider = model.id.split('/')[0];
-                        if (provider) {
-                            visionProviders.add(provider);
-                        }
-                    }
-                });
-
-                let providersArr = Array.from(visionProviders).sort();
+            function updateModelDropdown(selectElement, selectedProvider, modelFilter) {
+                const currentSelection = selectElement.value;
+                selectElement.innerHTML = '<option value="">Select a model...</option>';
+                let modelsToShow = availableModels.filter(modelFilter);
                 if (freeOnly) {
-                    providersArr = providersArr.filter(p => providerHasFreeModelFor(p, m => m.architecture?.input_modalities?.includes('image')));
+                    modelsToShow = modelsToShow.filter(isFreeModel);
                 }
-                
-                const currentSelection = handwritingProviderSelect.value;
-                handwritingProviderSelect.innerHTML = '<option value="">All Providers</option>';
-
-                if (providersArr.length === 0) {
-                    handwritingProviderSelect.disabled = true;
-                    handwritingModelSelect.disabled = true;
-                    handwritingProviderSelect.innerHTML = '<option value="">No free providers available</option>';
-                    handwritingModelSelect.innerHTML = '<option value="">' + (freeOnly ? 'No free vision models available' : 'No vision models available') + '</option>';
-                    showNotice(handwritingNotice, freeOnly ? 'No free models available.' : 'No models available.');
-                    return;
-                } else {
-                    handwritingProviderSelect.disabled = false;
-                }
-                
-                providersArr.forEach(provider => {
-                    const option = document.createElement('option');
-                    option.value = provider;
-                    const freeBadge = (freeOnly || providerHasFreeModelFor(provider, m => m.architecture?.input_modalities?.includes('image'))) ? ' — Free' : '';
-                    option.textContent = provider.charAt(0).toUpperCase() + provider.slice(1) + freeBadge;
-                    handwritingProviderSelect.appendChild(option);
-                });
-                
-                // Restore previous selection if it still exists
-                if (providersArr.includes(currentSelection)) {
-                    handwritingProviderSelect.value = currentSelection;
-                } else if (currentSelection) {
-                    handwritingProviderSelect.value = "";
-                    showNotice(handwritingNotice, 'Previous provider selection is not available with current filters.');
-                }
-            }
-
-            function updateGradingProviderDropdown() {
-                // Providers that have text-capable models
-                const textProviders = new Set();
-                availableModels.forEach(model => {
-                    if (supportsText(model)) {
-                        const provider = model.id.split('/')[0];
-                        if (provider) textProviders.add(provider);
-                    }
-                });
-
-                let providersArr = Array.from(textProviders).sort();
-                if (freeOnly) {
-                    providersArr = providersArr.filter(p => providerHasFreeModelFor(p, m => supportsText(m)));
-                }
-
-                const currentSelection = gradingProviderSelect.value;
-                gradingProviderSelect.innerHTML = '<option value="">Select Provider</option>';
-
-                if (providersArr.length === 0) {
-                    gradingProviderSelect.disabled = true;
-                    gradingModelSelect.disabled = true;
-                    gradingProviderSelect.innerHTML = '<option value="">No free providers available</option>';
-                    gradingModelSelect.innerHTML = '<option value="">No free models available</option>';
-                    showNotice(gradingNotice, 'No free models available.');
-                    return;
-                } else {
-                    gradingProviderSelect.disabled = false;
-                }
-
-                providersArr.forEach(provider => {
-                    const option = document.createElement('option');
-                    option.value = provider;
-                    const freeBadge = (freeOnly || providerHasFreeModelFor(provider, m => supportsText(m))) ? ' — Free' : '';
-                    option.textContent = provider.charAt(0).toUpperCase() + provider.slice(1) + freeBadge;
-                    gradingProviderSelect.appendChild(option);
-                });
-                
-                // Restore previous selection if it still exists
-                if (providersArr.includes(currentSelection)) {
-                    gradingProviderSelect.value = currentSelection;
-                } else if (currentSelection) {
-                    gradingProviderSelect.value = "";
-                    gradingModelInfo.textContent = "";
-                    showNotice(gradingNotice, 'Previous provider selection is not available with current filters.');
-                }
-            }
-
-            function updateModelDropdown() {
-                // This dropdown is for the Image Prompt Generator and intentionally shows FREE models only
-                let modelsToShow = availableModels.filter(m => isFreeModel(m));
-
-                // Filter models based on selected provider
                 if (selectedProvider) {
                     modelsToShow = modelsToShow.filter(model => model.id.startsWith(selectedProvider + '/'));
                 }
-
-                // Clear and populate the model select
-                modelSelect.innerHTML = '';
-
-                if (modelsToShow.length === 0) {
-                    if (selectedProvider) {
-                        modelSelect.innerHTML = `<option value="">No free models available for ${selectedProvider}</option>`;
-                    } else {
-                        modelSelect.innerHTML = '<option value="">No free models available</option>';
-                    }
-                } else {
-                    modelSelect.innerHTML = '<option value="">Select a model...</option>';
-
-                    modelsToShow.forEach(model => {
-                        const option = document.createElement('option');
-                        option.value = model.id;
-                        option.textContent = model.name || model.id;
-                        modelSelect.appendChild(option);
-                    });
-                }
-
-                updateGenerateButton();
-            }
-
-            function updateHandwritingModelDropdown() {
-                // Filter models based on selected provider and vision capability
-                let modelsToShow = availableModels.filter(model => 
-                    model.architecture?.input_modalities?.includes('image')
-                );
-                
-                const selectedHandwritingProvider = handwritingProviderSelect.value;
-                if (selectedHandwritingProvider) {
-                    modelsToShow = modelsToShow.filter(model => 
-                        model.id.startsWith(selectedHandwritingProvider + '/')
-                    );
-                }
-                
-                // Clear and populate the handwriting model select
-                handwritingModelSelect.innerHTML = '';
-                
-                if (modelsToShow.length === 0) {
-                    if (selectedHandwritingProvider) {
-                        handwritingModelSelect.innerHTML = `<option value="">No vision models available for ${selectedHandwritingProvider}</option>`;
-                    } else {
-                        handwritingModelSelect.innerHTML = '<option value="">No vision models available</option>';
-                    }
-                } else {
-                    handwritingModelSelect.innerHTML = '<option value="">Select a vision model...</option>';
-                    
-                    modelsToShow.forEach(model => {
-                        const option = document.createElement('option');
-                        option.value = model.id;
-                        option.textContent = model.name;
-                        handwritingModelSelect.appendChild(option);
-                    });
-                }
-                
-                updateExtractButton();
-            }
-
-            function handleProviderChange() {
-                selectedProvider = providerSelect.value;
-                updateModelDropdown();
-                // Clear model info when provider changes
-                modelInfo.textContent = '';
-            }
-
-            function handleHandwritingProviderChange() {
-                updateHandwritingModelDropdown();
-                // Clear model info when provider changes
-                handwritingModelInfo.textContent = '';
-            }
-
-            function startAutoRefresh() {
-                // Clear any existing interval
-                if (modelRefreshInterval) {
-                    clearInterval(modelRefreshInterval);
-                }
-                
-                // Set up periodic refresh
-                modelRefreshInterval = setInterval(() => {
-                    if (isPageVisible) {
-                        console.log('Auto-refreshing models...');
-                        loadModels();
-                    }
-                }, MODEL_REFRESH_INTERVAL);
-                
-                console.log(`Auto-refresh started: will refresh models every ${MODEL_REFRESH_INTERVAL / 60000} minutes`);
-                updateAutoRefreshStatus();
-            }
-
-            function updateAutoRefreshStatus() {
-                if (lastModelRefresh > 0) {
-                    const lastRefreshTime = new Date(lastModelRefresh).toLocaleTimeString();
-                    autoRefreshStatus.textContent = `Last updated: ${lastRefreshTime} | Auto-refresh: every 5 min`;
-                } else {
-                    autoRefreshStatus.textContent = `Auto-refresh: every 5 min`;
+                modelsToShow.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.id;
+                    option.textContent = model.name || model.id;
+                    selectElement.appendChild(option);
+                });
+                if (modelsToShow.some(m => m.id === currentSelection)) {
+                    selectElement.value = currentSelection;
                 }
             }
 
-            function handleVisibilityChange() {
-                isPageVisible = !document.hidden;
-                
-                if (isPageVisible) {
-                    console.log('Page became visible');
-                    // Check if models are stale and refresh if needed
-                    const now = Date.now();
-                    if ((now - lastModelRefresh) > MODEL_REFRESH_INTERVAL) {
-                        console.log('Models are stale, refreshing...');
-                        loadModels();
-                    }
-                } else {
-                    console.log('Page became hidden');
-                }
-            }
-
-            function handleModelSelectFocus() {
-                // Refresh models if they're getting stale (more than 2 minutes old)
-                const now = Date.now();
-                if ((now - lastModelRefresh) > MODEL_CACHE_DURATION) {
-                    console.log('Models are stale, refreshing on focus...');
-                    loadModels();
-                }
-            }
-
-            function handleHandwritingToggle() {
-                const isEnabled = handwritingToggle.checked;
-                handwritingUploadSection.style.display = isEnabled ? 'block' : 'none';
-                if (!isEnabled) {
-                    // Clear handwriting input and preview when disabled
-                    handwritingInput.value = '';
-                    handwritingPreview.style.display = 'none';
-                    updateExtractButton();
-                }
-            }
-
-            function handleHandwritingUpload(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        handwritingPreview.src = e.target.result;
-                        handwritingPreview.style.display = "block";
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    handwritingPreview.style.display = "none";
-                }
-                updateExtractButton();
-            }
-
-            async function extractTextFromHandwriting() {
-                const apiKey = apiKeyInput.value.trim();
-                if (!apiKey) {
-                    alert("Please enter your OpenRouter API key");
-                    return;
-                }
-
-                const selectedModel = handwritingModelSelect.value;
-                if (!selectedModel) {
-                    alert("Please select a vision model");
-                    return;
-                }
-
-                const hasImage = handwritingInput.files[0];
-                if (!hasImage) {
-                    alert("Please upload a handwriting image");
-                    return;
-                }
-
-                handwritingLoading.style.display = "block";
-                extractTextBtn.disabled = true;
-
-                const prompt = `
-Please extract and transcribe all the text from this handwriting image. 
-
-Instructions:
-- Read through the handwritten text carefully
-- Transcribe exactly what is written, including any spelling errors or unusual formatting
-- Maintain the original structure and line breaks where possible
-- If any text is unclear or illegible, indicate this with [unclear] or [illegible]
-- Do not add punctuation or corrections unless they are clearly present in the original
-- Only return the transcribed text, no additional commentary
-
-Please provide the transcription:
-`;
-
-                try {
-                    const imageBase64 = handwritingPreview.src; // Already includes data:image/jpeg;base64, prefix
-                    
-                    const messages = [
-                        {
-                            role: 'user',
-                            content: [
-                                {
-                                    type: 'text',
-                                    text: prompt,
-                                },
-                                {
-                                    type: 'image_url',
-                                    image_url: {
-                                        url: imageBase64,
-                                    },
-                                },
-                            ],
-                        },
-                    ];
-
-                    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${apiKey}`,
-                            'Content-Type': 'application/json',
-                            'HTTP-Referer': window.location.origin,
-                            'X-Title': 'Creative Writing Handwriting Extractor',
-                        },
-                        body: JSON.stringify({
-                            model: selectedModel,
-                            messages: messages,
-                            temperature: 0.1, // Low temperature for accuracy
-                            max_tokens: 2000,
-                        }),
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("API Error:", errorData);
-                        throw new Error(
-                            `API error: ${errorData.error?.message || "Unknown error"}`
-                        );
-                    }
-
-                    const data = await response.json();
-
-                    if (data.choices && data.choices[0] && data.choices[0].message) {
-                        const extractedTextContent = data.choices[0].message.content;
-                        extractedText.value = extractedTextContent;
-                        // Auto-populate the student writing in grading section
-                        studentWriting.value = extractedTextContent;
-                        updateGradeButton(); // Update grading button state
-                    } else {
-                        throw new Error("Invalid response from API");
-                    }
-                } catch (error) {
-                    console.error("Error:", error);
-                    alert(
-                        `Error: ${
-                            error.message || "Error extracting text. Please try again."
-                        }`
-                    );
-                } finally {
-                    handwritingLoading.style.display = "none";
-                    extractTextBtn.disabled = false;
-                }
-            }
-
-            function handleImageUpload(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        imagePreview.src = e.target.result;
-                        imagePreview.style.display = "block";
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    imagePreview.style.display = "none";
-                }
-                updateGenerateButton();
-            }
-
-            async function generateDescription() {
-                const apiKey = apiKeyInput.value.trim();
-                if (!apiKey) {
-                    alert("Please enter your OpenRouter API key");
-                    return;
-                }
-
-                const selectedModel = modelSelect.value;
-                if (!selectedModel) {
-                    alert("Please select a model");
-                    return;
-                }
-
-                loading.style.display = "block";
-                generateBtn.disabled = true;
-                result.style.display = "none";
-
-                const hasImage = imageInput.files[0];
-                
-                const prompt = hasImage ? `
-Describe the image in details for using as writing prompt.
-
-- Look at the image and describe what you see in detail
-- State the main elements, colors, subjects, and any text visible in the image
-- Identify the writing task requirements shown in or implied by the image
-- Summarize how this image serves as a writing prompt
-` : `
-Generate a creative writing prompt. Provide:
-
-- A detailed scenario or setting
-- Character suggestions or interesting situations
-- Specific writing goals or constraints
-- Genre suggestions (fantasy, mystery, romance, sci-fi, etc.)
-- Any unique elements that would inspire creative writing
-
-Make it engaging and thought-provoking for writers looking for inspiration.
-`;
-
-                try {
-                    let messages = [];
-
-                    if (hasImage) {
-                        // Check if selected model supports image input
-                        const modelData = availableModels.find(m => m.id === selectedModel);
-                        const supportsImages = modelData?.architecture?.input_modalities?.includes('image');
-                        
-                        if (!supportsImages) {
-                            alert("Selected model doesn't support image input. Please choose a different model or remove the image.");
-                            return;
+            function setDefaultModels() {
+                const defaultModelExists = availableModels.some(m => m.id === DEFAULT_MODEL);
+                if (defaultModelExists) {
+                    [modelSelect, handwritingModelSelect, gradingModelSelect].forEach(select => {
+                        if (Array.from(select.options).some(o => o.value === DEFAULT_MODEL)) {
+                            select.value = DEFAULT_MODEL;
                         }
-
-                        // Handle image input
-                        const imageBase64 = imagePreview.src; // Already includes data:image/jpeg;base64, prefix
-                        
-                        messages = [
-                            {
-                                role: 'user',
-                                content: [
-                                    {
-                                        type: 'text',
-                                        text: prompt,
-                                    },
-                                    {
-                                        type: 'image_url',
-                                        image_url: {
-                                            url: imageBase64,
-                                        },
-                                    },
-                                ],
-                            },
-                        ];
-                    } else {
-                        // Handle text-only input
-                        messages = [
-                            {
-                                role: 'user',
-                                content: prompt,
-                            },
-                        ];
-                    }
-
-                    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${apiKey}`,
-                            'Content-Type': 'application/json',
-                            'HTTP-Referer': window.location.origin, // Optional for rankings
-                            'X-Title': 'Creative Writing Image Prompt Generator', // Optional for rankings
-                        },
-                        body: JSON.stringify({
-                            model: selectedModel,
-                            messages: messages,
-                            temperature: 0.7,
-                            max_tokens: 2000,
-                        }),
                     });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("API Error:", errorData);
-                        throw new Error(
-                            `API error: ${errorData.error?.message || "Unknown error"}`
-                        );
-                    }
-
-                    const data = await response.json();
-
-                    if (data.choices && data.choices[0] && data.choices[0].message) {
-                        const description = data.choices[0].message.content;
-                        // Store the generated prompt for grading section
-                        currentImagePrompt = description;
-                        // Auto-populate the writing prompt in grading section
-                        writingPrompt.value = description;
-                        updateGradeButton(); // Update grading button state
-                        
-                        // Parse markdown and render as HTML
-                        const htmlContent = marked.parse(description);
-                        result.innerHTML = htmlContent;
-                        result.style.display = "block";
-                    } else {
-                        throw new Error("Invalid response from API");
-                    }
-                } catch (error) {
-                    console.error("Error:", error);
-                    alert(
-                        `Error: ${
-                            error.message || "Error generating description. Please try again."
-                        }`
-                    );
-                } finally {
-                    loading.style.display = "none";
-                    generateBtn.disabled = false;
+                    updateAllModelInfos();
                 }
             }
 
-            // Grading Section Functions
-            function useCurrentImagePrompt() {
-                if (currentImagePrompt.trim()) {
-                    writingPrompt.value = currentImagePrompt;
-                    updateGradeButton();
-                } else {
-                    alert("No image prompt available. Please generate an image prompt first.");
-                }
+            function updateAllModelInfos() {
+                updateModelInfo(modelSelect, modelInfo);
+                updateModelInfo(handwritingModelSelect, handwritingModelInfo);
+                updateModelInfo(gradingModelSelect, gradingModelInfo);
             }
 
-            function useExtractedText() {
-                const extractedTextValue = extractedText.value.trim();
-                if (extractedTextValue) {
-                    studentWriting.value = extractedTextValue;
-                    updateGradeButton();
-                } else {
-                    alert("No extracted text available. Please extract handwriting text first or enter the student writing manually.");
-                }
-            }
-
-            function autoSyncExtractedText() {
-                // Auto-sync extracted text to student writing when manually edited
-                const extractedTextValue = extractedText.value.trim();
-                if (extractedTextValue) {
-                    studentWriting.value = extractedTextValue;
-                    updateGradeButton();
-                }
-            }
-
-            function updateGradingModelDropdown() {
-                const selectedProviderVal = gradingProviderSelect.value;
-                // Keep disabled until provider picked, matching original UX
-                if (!selectedProviderVal) {
-                    gradingModelSelect.innerHTML = '<option value="">Select Model</option>';
-                    gradingModelSelect.disabled = true;
-                    return;
-                }
-
-                let modelsToShow = availableModels.filter(m => supportsText(m) && m.id.startsWith(selectedProviderVal + '/'));
-                if (freeOnly) modelsToShow = modelsToShow.filter(m => isFreeModel(m));
-
-                const prev = gradingModelSelect.value;
-                gradingModelSelect.innerHTML = '';
-
-                if (modelsToShow.length === 0) {
-                    gradingModelSelect.innerHTML = `<option value="">${freeOnly ? 'No free models available' : 'No models available'}</option>`;
-                    gradingModelSelect.disabled = true;
-                    showNotice(gradingNotice, freeOnly ? 'No free models available.' : 'No models available.');
-                } else {
-                    gradingModelSelect.disabled = false;
-                    gradingModelSelect.innerHTML = '<option value="">Select Model</option>';
-                    modelsToShow.forEach(model => {
-                        const option = document.createElement('option');
-                        option.value = model.id;
-                        option.textContent = (model.name || model.id) + (isFreeModel(model) ? ' — Free' : '');
-                        gradingModelSelect.appendChild(option);
-                    });
-
-                    if (prev && modelsToShow.some(m => m.id === prev)) {
-                        gradingModelSelect.value = prev;
-                    } else if (prev) {
-                        gradingModelInfo.textContent = '';
-                        showNotice(gradingNotice, 'Previous model selection is not available with current filters.');
-                    }
-                }
-
-                updateGradeButton();
-            }
-
-            function handleGradingProviderChange() {
-                updateGradingModelDropdown();
-                // Clear model info when provider changes
-                gradingModelInfo.textContent = '';
-            }
-
-            function updateGradingModelInfo() {
-                const selectedModelId = gradingModelSelect.value;
-                const selectedModel = availableModels.find(model => model.id === selectedModelId);
-                
+            function updateModelInfo(selectElement, infoElement) {
+                const selectedModel = availableModels.find(m => m.id === selectElement.value);
                 if (selectedModel) {
-                    const contextLength = selectedModel.context_length ? `${selectedModel.context_length.toLocaleString()} tokens` : 'Unknown';
-                    const modalities = selectedModel.architecture?.input_modalities?.join(', ') || 'text';
-                    gradingModelInfo.textContent = `Context: ${contextLength} | Input: ${modalities}`;
+                    infoElement.textContent = `Context: ${selectedModel.context_length.toLocaleString()} | Input: ${selectedModel.architecture?.input_modalities?.join(', ')}`;
                 } else {
-                    gradingModelInfo.textContent = '';
+                    infoElement.textContent = '';
                 }
-                updateGradeButton();
+                updateButtonStates();
             }
 
-            function updateGradeButton() {
-                const apiKey = apiKeyInput.value.trim();
-                const hasSelectedModel = gradingModelSelect.value && gradingModelSelect.value !== "";
-                const hasWritingPrompt = writingPrompt.value.trim() !== "";
-                const hasStudentWriting = studentWriting.value.trim() !== "";
-                const keyValid = apiKeyStatus?.dataset?.state === 'valid';
-                gradeWritingBtn.disabled = !apiKey || !hasSelectedModel || !hasWritingPrompt || !hasStudentWriting || !keyValid;
+            function updateButtonStates() {
+                const apiKeyValid = apiKeyStatus.dataset.state === 'valid';
+                generateBtn.disabled = !apiKeyValid || !modelSelect.value;
+                extractTextBtn.disabled = !apiKeyValid || !handwritingModelSelect.value || !handwritingInput.files[0];
+                gradeWritingBtn.disabled = !apiKeyValid || !gradingModelSelect.value || !writingPrompt.value || !studentWriting.value;
             }
 
-            // --- API key validation & persistence ---
-            let validateTimeout = null;
-            let validateController = null;
-            function scheduleApiKeyValidation() {
-                if (validateTimeout) clearTimeout(validateTimeout);
-                validateTimeout = setTimeout(() => validateApiKey({}), 700);
-            }
-
-            async function validateApiKey(opts = {}) {
-                const { force = false, silent = false, initial = false } = opts;
+            async function validateApiKey() {
                 const key = apiKeyInput.value.trim();
                 if (!key) {
                     setApiKeyStatus('unknown', 'Not validated');
-                    return false;
+                    return;
                 }
-
-                // avoid duplicate in-flight validations unless forced
-                if (validateController && !force) return;
-
                 setApiKeyStatus('pending', 'Validating...');
-
-                if (validateController) {
-                    try { validateController.abort(); } catch(e){}
-                }
-                validateController = new AbortController();
-
                 try {
-                    const res = await fetch('https://openrouter.ai/api/v1/models', {
-                        method: 'GET',
-                        headers: { 'Authorization': `Bearer ${key}` },
-                        signal: validateController.signal,
-                    });
-
+                    const res = await fetch('https://openrouter.ai/api/v1/models', { headers: { 'Authorization': `Bearer ${key}` } });
                     if (res.ok) {
                         setApiKeyStatus('valid', 'API Key Valid');
-                        // persist if remembered
-                        try {
-                            if (rememberApiKey && rememberApiKey.checked) {
-                                localStorage.setItem('openrouter_api_key', key);
-                                localStorage.setItem('openrouter_api_key_remember', 'true');
-                            }
-                        } catch (e) {}
-                        updateGenerateButton(); updateExtractButton(); updateGradeButton();
-                        return true;
-                    } else if (res.status === 401 || res.status === 403) {
-                        setApiKeyStatus('invalid', 'API Key Invalid');
-                        return false;
+                        if (rememberApiKey.checked) localStorage.setItem('openrouter_api_key', key);
                     } else {
-                        // retry once for transient errors
-                        if (!opts._retried) {
-                            setApiKeyStatus('pending', 'Validation Error — retrying...');
-                            await new Promise(r => setTimeout(r, 1000));
-                            return validateApiKey(Object.assign({}, opts, {_retried:true}));
-                        }
-                        setApiKeyStatus('error', 'Validation Error — retry');
-                        return false;
+                        setApiKeyStatus('invalid', 'API Key Invalid');
                     }
                 } catch (err) {
-                    if (err.name === 'AbortError') return;
-                    if (!opts._retried) {
-                        setApiKeyStatus('pending', 'Validation Error — retrying...');
-                        await new Promise(r => setTimeout(r, 1000));
-                        return validateApiKey(Object.assign({}, opts, {_retried:true}));
-                    }
-                    setApiKeyStatus('error', 'Validation Error — retry');
-                    return false;
-                } finally {
-                    validateController = null;
+                    setApiKeyStatus('error', 'Validation Error');
                 }
             }
 
             function setApiKeyStatus(state, text) {
-                if (!apiKeyStatus) return;
-                apiKeyStatus.dataset.state = state || 'unknown';
-                apiKeyStatus.textContent = text || '';
-                apiKeyStatus.classList.remove('valid','invalid','pending');
-                if (state === 'valid') apiKeyStatus.classList.add('valid');
-                else if (state === 'invalid') apiKeyStatus.classList.add('invalid');
-                else if (state === 'pending') apiKeyStatus.classList.add('pending');
-
-                // toggle red border only when invalid
-                if (state === 'invalid') apiKeyInput.classList.add('api-key-invalid');
-                else apiKeyInput.classList.remove('api-key-invalid');
-                if (state === 'valid') {
-                    lastValidApiKey = apiKeyInput.value.trim();
-                    try { localStorage.setItem(STORAGE_KEYS.lastValidApiKey, lastValidApiKey); } catch (e) {}
-                }
-                updateGenerateButton(); updateExtractButton(); updateGradeButton();
+                apiKeyStatus.dataset.state = state;
+                apiKeyStatus.textContent = text;
+                updateButtonStates();
             }
 
-            function clearStoredApiKey() {
+            async function callApi(model, messages, loadingElement, resultElement, outputProcessor) {
+                loadingElement.style.display = 'block';
+                resultElement.style.display = 'none';
                 try {
-                    localStorage.removeItem('openrouter_api_key');
-                    localStorage.removeItem('openrouter_api_key_remember');
-                } catch (e) {}
-                if (rememberApiKey) rememberApiKey.checked = false;
-                apiKeyInput.value = '';
-                setApiKeyStatus('unknown', 'Not validated');
-                updateGenerateButton(); updateExtractButton(); updateGradeButton();
-            }
-
-            function onRememberToggle() {
-                try {
-                    if (rememberApiKey.checked) {
-                        localStorage.setItem('openrouter_api_key_remember', 'true');
-                        // persist immediately if valid
-                        if (apiKeyStatus.dataset.state === 'valid') {
-                            localStorage.setItem('openrouter_api_key', apiKeyInput.value.trim());
-                        }
-                    } else {
-                        localStorage.removeItem('openrouter_api_key_remember');
-                        localStorage.removeItem('openrouter_api_key');
-                    }
-                } catch (e) {}
-            }
-
-            async function gradeStudentWriting() {
-                const apiKey = apiKeyInput.value.trim();
-                const modelId = gradingModelSelect.value;
-                const promptText = writingPrompt.value.trim();
-                const writingText = studentWriting.value.trim();
-
-                if (!apiKey || !modelId || !promptText || !writingText) {
-                    alert("Please fill in all required fields and select a model.");
-                    return;
-                }
-
-                gradingLoading.style.display = "block";
-                gradeWritingBtn.disabled = true;
-                gradingResults.style.display = "none";
-
-                try {
-                    const gradingPrompt = createGradingPrompt(promptText, writingText);
-
-            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                        method: "POST",
+                    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                        method: 'POST',
                         headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json",
-                'HTTP-Referer': window.location.origin,
-                'X-Title': 'Creative Writing Grader',
+                            'Authorization': `Bearer ${apiKeyInput.value.trim()}`,
+                            'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
-                            model: modelId,
-                            messages: [
-                                {
-                                    role: "user",
-                                    content: gradingPrompt
-                                }
-                            ],
-                            max_tokens: 4000,
-                            temperature: 0.3,
-                        }),
+                        body: JSON.stringify({ model, messages }),
                     });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("API Error:", errorData);
-                        throw new Error(
-                            `API error: ${errorData.error?.message || "Unknown error"}`
-                        );
-                    }
-
+                    if (!response.ok) throw new Error(`API error: ${response.statusText}`);
                     const data = await response.json();
-
-                    if (data.choices && data.choices[0] && data.choices[0].message) {
-                        const gradingResult = data.choices[0].message.content;
-                        // Parse markdown and render as HTML
-                        const htmlContent = marked.parse(gradingResult);
-                        gradingOutput.innerHTML = htmlContent;
-                        gradingResults.style.display = "block";
-                        
-                        // Store the grading result for download
-                        window.currentGradingResult = {
-                            prompt: promptText,
-                            writing: writingText,
-                            grading: gradingResult
-                        };
-                    } else {
-                        throw new Error("Invalid response from API");
-                    }
+                    outputProcessor(data.choices[0].message.content);
                 } catch (error) {
-                    console.error("Error:", error);
-                    alert(
-                        `Error: ${
-                            error.message || "Error grading writing. Please try again."
-                        }`
-                    );
+                    alert(`Error: ${error.message}`);
                 } finally {
-                    gradingLoading.style.display = "none";
-                    gradeWritingBtn.disabled = false;
-                    updateGradeButton();
+                    loadingElement.style.display = 'none';
+                    updateButtonStates();
                 }
             }
+
+            imageInput.addEventListener("change", (e) => handleImageUpload(e, imagePreview));
+            handwritingInput.addEventListener("change", (e) => handleImageUpload(e, handwritingPreview));
+
+            function handleImageUpload(event, previewElement) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        previewElement.src = e.target.result;
+                        previewElement.style.display = "block";
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewElement.style.display = "none";
+                }
+                updateButtonStates();
+            }
+
+            generateBtn.addEventListener("click", () => {
+                const hasImage = imageInput.files[0];
+                const prompt = hasImage ? `Describe this image for a creative writing prompt.` : `Generate a creative writing prompt.`;
+                let content = [{ type: 'text', text: prompt }];
+                if (hasImage) {
+                    content.push({ type: 'image_url', image_url: { url: imagePreview.src } });
+                }
+                callApi(modelSelect.value, [{ role: 'user', content }], loading, result, (res) => {
+                    currentImagePrompt = res;
+                    result.innerHTML = marked.parse(res);
+                    result.style.display = 'block';
+                    writingPrompt.value = res;
+                });
+            });
+
+            extractTextBtn.addEventListener("click", () => {
+                const prompt = `Extract all text from this handwriting image.`;
+                const content = [{ type: 'text', text: prompt }, { type: 'image_url', image_url: { url: handwritingPreview.src } }];
+                callApi(handwritingModelSelect.value, [{ role: 'user', content }], handwritingLoading, extractedText, (res) => {
+                    extractedText.value = res;
+                    studentWriting.value = res;
+                });
+            });
 
             function createGradingPrompt(writingPrompt, studentWriting) {
                 return `## PURPOSE
@@ -1888,41 +608,48 @@ Please provide your assessment in the following format:
 Please evaluate the student's writing thoroughly and provide constructive feedback that will help them improve their writing skills.`;
             }
 
-            function downloadGradingReport() {
-                if (!window.currentGradingResult) {
-                    alert("No grading results available to download.");
-                    return;
+            gradeWritingBtn.addEventListener("click", () => {
+                const gradingPrompt = createGradingPrompt(writingPrompt.value, studentWriting.value);
+                callApi(gradingModelSelect.value, [{ role: 'user', content: gradingPrompt }], gradingLoading, gradingResults, (res) => {
+                    gradingOutput.innerHTML = marked.parse(res);
+                    gradingResults.style.display = 'block';
+                    window.currentGradingResult = res;
+                });
+            });
+
+            // Event Listeners Setup
+            document.addEventListener('DOMContentLoaded', () => {
+                loadModels();
+                if (localStorage.getItem('openrouter_api_key')) {
+                    apiKeyInput.value = localStorage.getItem('openrouter_api_key');
+                    rememberApiKey.checked = true;
+                    validateApiKey();
                 }
+            });
+            validateApiKeyBtn.addEventListener("click", validateApiKey);
+            clearApiKeyBtn.addEventListener("click", () => {
+                apiKeyInput.value = '';
+                localStorage.removeItem('openrouter_api_key');
+                rememberApiKey.checked = false;
+                setApiKeyStatus('unknown', 'Not validated');
+            });
+            [freeOnlyToggle, freeOnlyToggleHandwriting, freeOnlyToggleGrading].forEach(toggle => toggle.addEventListener('change', onFreeOnlyChange));
+            [providerSelect, handwritingProviderSelect, gradingProviderSelect].forEach(select => select.addEventListener('change', () => updateAllDropdowns()));
+            [modelSelect, handwritingModelSelect, gradingModelSelect].forEach(select => select.addEventListener('change', () => updateAllModelInfos()));
+            useImagePromptBtn.addEventListener('click', () => writingPrompt.value = currentImagePrompt);
+            useExtractedBtn.addEventListener('click', () => studentWriting.value = extractedText.value);
+            downloadGradingBtn.addEventListener('click', () => {
+                if (window.currentGradingResult) {
+                    const blob = new Blob([window.currentGradingResult], { type: 'text/markdown' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'grading_report.md';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            });
 
-                const result = window.currentGradingResult;
-                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-                const filename = `grading_report_${timestamp}.md`;
-
-                const content = `# Grading Report
-
-## Writing Prompt
-${result.prompt}
-
-## Student Writing
-${result.writing}
-
-## Grading Results
-${result.grading}
-
----
-*Generated on ${new Date().toLocaleString()}*
-`;
-
-                const blob = new Blob([content], { type: 'text/markdown' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }
         </script>
     </body>
 </html>
