@@ -1,5 +1,5 @@
 // Lightweight wizard controller for step-based layout
-(function(){
+document.addEventListener('DOMContentLoaded', () => {
   const steps = Array.from(document.querySelectorAll('[data-step]'));
   if (!steps.length) return;
 
@@ -34,7 +34,10 @@
 
     // buttons
     if (backBtn) backBtn.disabled = index===0;
-    if (nextBtn) nextBtn.textContent = (index===total-1)?'Finish':'Next';
+    if (nextBtn) {
+        nextBtn.textContent = (index===total-1)?'Finish':'Next';
+        nextBtn.disabled = index === total - 1;
+    }
   }
 
   // allow jumping by clicking pills if present
@@ -52,20 +55,21 @@
         return; // block advance
       }
     }
-    if (current === total -1){
-      // finalize: just alert or could trigger a save
-      showStep(current);
-    } else showStep(current+1);
+    if (current < total - 1){
+      showStep(current+1);
+    }
   });
 
   if (backBtn) backBtn.addEventListener('click', ()=> showStep(current-1));
 
   // keyboard shortcuts: Alt+ArrowLeft/Right to navigate
   window.addEventListener('keydown', (e)=>{
-    if (e.altKey && e.key === 'ArrowRight') { showStep(current+1); }
+    if (e.altKey && e.key === 'ArrowRight') { 
+        if (current < total - 1) showStep(current+1); 
+    }
     if (e.altKey && e.key === 'ArrowLeft') { showStep(current-1); }
   });
 
   // initialize
   showStep(0);
-})();
+});
