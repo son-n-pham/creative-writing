@@ -728,8 +728,8 @@
         }
 
         window.showStep = (step) => {
-            // API Key Check
-            if (step > 1 && !els.status.textContent.includes('Valid')) {
+            // API Key Check - must have the checkmark emoji for valid status
+            if (step > 1 && !els.status.textContent.includes('✅ Valid')) {
                 showCustomAlert();
                 return;
             }
@@ -758,7 +758,13 @@
             }
         };
 
-        els.next.addEventListener('click', () => { if(currentStep < 4) showStep(currentStep+1); });
+        els.next.addEventListener('click', () => { 
+            if(currentStep === 1 && !els.status.textContent.includes('✅ Valid')) {
+                showCustomAlert();
+                return;
+            }
+            if(currentStep < 4) showStep(currentStep+1); 
+        });
         els.back.addEventListener('click', () => { if(currentStep > 1) showStep(currentStep-1); });
 
         // --- TIMER LOGIC ---
@@ -1202,7 +1208,7 @@ Please evaluate the student's writing thoroughly and provide constructive feedba
 
         // --- INIT ---
         function checkBtnStates() {
-            const valid = els.status.textContent.includes('Valid');
+            const valid = els.status.textContent.includes('✅ Valid');
             els.extBtn.disabled = !valid || !els.hwPrev.src;
             els.gradeBtn.disabled = !valid || !els.wPrompt.value || !els.sWriting.value;
 
@@ -1214,11 +1220,10 @@ Please evaluate the student's writing thoroughly and provide constructive feedba
                 }
             });
             
-            if (currentStep === 1) {
-                els.next.disabled = !valid;
-            } else {
-                els.next.disabled = false;
-            }
+            // Always enable Next button so we can show the alert on click,
+            // but use stop cursor when not valid
+            els.next.disabled = false;
+            els.next.style.cursor = valid ? 'pointer' : 'not-allowed';
         }
 
         document.getElementById('validateApiKeyBtn').addEventListener('click', async () => {
