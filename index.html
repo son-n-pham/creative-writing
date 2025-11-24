@@ -185,6 +185,9 @@
             background: var(--primary-color); color: var(--primary-text);
             opacity: 1; transform: scale(1.05); box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        .step-pill.disabled {
+            opacity: 0.5; cursor: not-allowed; filter: grayscale(100%);
+        }
         [data-theme="mha"] .steps-nav, [data-theme="mha"] .step-pill { border-radius: 0; }
         [data-theme="mha"] .step-pill.active { border: 2px solid black; transform: skew(-10deg); }
 
@@ -381,6 +384,15 @@
                 <p>Open Source Project: <a href="https://github.com/son-n-pham/creative-writing" target="_blank">GitHub Repository</a></p>
                 <p>This app is designed to be <strong>free</strong> when using free models from OpenRouter.</p>
             </div>
+        </div>
+    </div>
+
+    <!-- ALERT MODAL -->
+    <div id="customAlert" class="modal" style="z-index: 2100;">
+        <div class="modal-content" style="max-width: 400px; text-align: center; border-top: 10px solid var(--primary-color);">
+            <h2 id="alertTitle" style="margin-top:0;">Attention</h2>
+            <p id="alertMessage" style="font-size: 1.1rem; margin: 20px 0;">Please validate your API Key.</p>
+            <button class="primary" onclick="document.getElementById('customAlert').style.display='none'">Understood</button>
         </div>
     </div>
 
@@ -606,10 +618,22 @@
         
         // --- TEXT CONFIGS ---
         const themeConfig = {
-            standard: { title: "Creative Writing Adventure", btnNext: "Next ▶", btnGrade: "Grade My Work" },
-            demon: { title: "Demon Slayer Writing Academy", btnNext: "Advance ▶", btnGrade: "Summon Hashira Judge" },
-            mha: { title: "U.A. High Entrance Exam", btnNext: "Plus Ultra! ▶", btnGrade: "Final Smash Assessment" },
-            lotr: { title: "Chronicles of Middle Earth", btnNext: "Journey On ▶", btnGrade: "Consult the Council" }
+            standard: { 
+                title: "Creative Writing Adventure", btnNext: "Next ▶", btnGrade: "Grade My Work",
+                alertMsg: "Please validate your API Key to continue."
+            },
+            demon: { 
+                title: "Demon Slayer Writing Academy", btnNext: "Advance ▶", btnGrade: "Summon Hashira Judge",
+                alertMsg: "You must forge your Nichirin Key (API Key) to proceed!"
+            },
+            mha: { 
+                title: "U.A. High Entrance Exam", btnNext: "Plus Ultra! ▶", btnGrade: "Final Smash Assessment",
+                alertMsg: "A valid Hero License (API Key) is required to access this area!"
+            },
+            lotr: { 
+                title: "Chronicles of Middle Earth", btnNext: "Journey On ▶", btnGrade: "Consult the Council",
+                alertMsg: "You shall not pass! Speak the secret word (API Key) first."
+            }
         };
 
         // --- DOM ELEMENTS ---
@@ -697,13 +721,26 @@
         });
 
         // --- NAVIGATION ---
+        function showCustomAlert() {
+            const t = els.theme.value;
+            document.getElementById('alertMessage').textContent = themeConfig[t].alertMsg;
+            document.getElementById('customAlert').style.display = 'block';
+        }
+
         window.showStep = (step) => {
+            // API Key Check
+            if (step > 1 && !els.status.textContent.includes('Valid')) {
+                showCustomAlert();
+                return;
+            }
+
             els.steps.forEach(s => s.classList.remove('active'));
             els.pills.forEach(p => p.classList.remove('active'));
             document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
             els.pills[step-1].classList.add('active');
             
             els.back.disabled = step === 1;
+            checkBtnStates();
             const t = els.theme.value;
             els.next.textContent = step === 4 ? "Finish" : themeConfig[t].btnNext;
             currentStep = step;
@@ -1168,23 +1205,53 @@ Please evaluate the student's writing thoroughly and provide constructive feedba
             const valid = els.status.textContent.includes('Valid');
             els.extBtn.disabled = !valid || !els.hwPrev.src;
             els.gradeBtn.disabled = !valid || !els.wPrompt.value || !els.sWriting.value;
+
+            // Disable Tabs & Next Button
+            els.pills.forEach((p, i) => {
+                if (i > 0) { // Steps 2, 3, 4
+                    if (valid) p.classList.remove('disabled');
+                    else p.classList.add('disabled');
+                }
+            });
+            
+            if (currentStep === 1) {
+                els.next.disabled = !valid;
+            } else {
+                els.next.disabled = false;
+            }
         }
 
         document.getElementById('validateApiKeyBtn').addEventListener('click', async () => {
+            // Check for empty API key first
+            if (!els.apiKey.value.trim()) {
+                els.status.textContent = '❌ Invalid';
+                checkBtnStates();
+                return;
+            }
+
             els.status.textContent = 'Validating...';
             try {
-                const r = await fetch('https://openrouter.ai/api/v1/models', {headers:{'Authorization':`Bearer ${els.apiKey.value}`}});
+                const r = await fetch('https://openrouter.ai/api/v1/auth/key', {headers:{'Authorization':`Bearer ${els.apiKey.value}`}});
                 if(r.ok) {
-                    els.status.textContent = '✅ Valid';
-                    if(document.getElementById('rememberApiKey').checked) localStorage.setItem('or_key', els.apiKey.value);
-                    loadModels();
-                } else els.status.textContent = '❌ Invalid';
+                    const data = await r.json();
+                    // Check if response has valid data structure
+                    if(data && data.data) {
+                        els.status.textContent = '✅ Valid';
+                        if(document.getElementById('rememberApiKey').checked) localStorage.setItem('or_key', els.apiKey.value);
+                        loadModels();
+                    } else {
+                        els.status.textContent = '❌ Invalid';
+                    }
+                } else {
+                    els.status.textContent = '❌ Invalid';
+                }
             } catch(e) { els.status.textContent = 'Error'; }
             checkBtnStates();
         });
 
         document.getElementById('clearApiKeyBtn').addEventListener('click', () => {
             els.apiKey.value = ''; localStorage.removeItem('or_key'); els.status.textContent = 'Not Validated';
+            checkBtnStates();
         });
 
         [els.freeTog, els.freeTogHw, els.freeTogGr].forEach(t => t.addEventListener('change', function(){
