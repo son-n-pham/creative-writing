@@ -261,6 +261,46 @@
         .loading::after { content: "..."; animation: dots 1.5s infinite; }
         @keyframes dots { 0%, 20% { content: "."; } 40% { content: ".."; } 60%, 100% { content: "..."; } }
 
+        /* Enhanced Retry Indicator */
+        .loading.retry-mode {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            animation: pulse-warning 2s infinite;
+        }
+        .loading.retry-mode::after { content: ""; animation: none; }
+        
+        @keyframes pulse-warning {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(255, 193, 7, 0.5); }
+        }
+        
+        .retry-content { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .retry-icon { font-size: 2rem; animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .retry-text { font-size: 1rem; color: #856404; font-style: normal; }
+        .retry-countdown { font-size: 2rem; font-weight: bold; color: #856404; font-family: var(--font-header); }
+        .retry-attempt { font-size: 0.85rem; color: #666; margin-top: 5px; }
+        
+        .retry-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .retry-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ffc107, #ff9800);
+            border-radius: 4px;
+            transition: width 1s linear;
+        }
+
         .wizard-footer { margin-top: 30px; display: flex; justify-content: space-between; border-top: 1px solid #ddd; padding-top: 20px; }
         .or-divider { text-align: center; margin: 15px 0; font-weight: bold; opacity: 0.5; font-size: 0.8rem; }
 
@@ -609,7 +649,7 @@
 
     <script>
         // --- CONFIG & STATE ---
-        const DEFAULT_MODEL = 'google/gemini-flash-1.5:free';
+        const DEFAULT_MODEL = ''; // Dynamic selection; no hardcoded default fallback
         let availableModels = [];
         let availableProviders = [];
         let freeOnly = true;
@@ -794,6 +834,13 @@
             return p && (p.prompt === 0 || p.prompt === "0") && (p.completion === 0 || p.completion === "0");
         }
 
+        function isVisionModel(model) {
+            return model?.architecture?.input_modalities?.includes('image') || 
+                   model?.id?.toLowerCase().includes('-vl') || 
+                   model?.id?.toLowerCase().includes('vision') ||
+                   model?.name?.toLowerCase().includes('vision');
+        }
+
         async function loadModels() {
             try {
                 const res = await fetch('https://openrouter.ai/api/v1/models');
@@ -850,38 +897,184 @@
         }
 
         function setDefaultModels() {
-            const grokFree = availableModels.find(m => (m.id.includes('grok') || m.name.toLowerCase().includes('grok')) && isFreeModel(m));
-            const googleFlash = availableModels.find(m => m.id.includes('google') && m.id.includes('flash') && isFreeModel(m));
-            
+            // 1. Identify all free Qwen Vision models
+            const qwenModels = availableModels.filter(m => 
+                (m.id.includes('qwen') || m.name?.toLowerCase().includes('qwen')) && 
+                isFreeModel(m) && isVisionModel(m)
+            );
+
+            // 2. Sort Qwen models to find the "latest/best"
+            qwenModels.sort((a, b) => {
+                const aName = (a.name || a.id).toLowerCase();
+                const bName = (b.name || b.id).toLowerCase();
+                const aInstruct = aName.includes('instruct') ? 1 : 0;
+                const bInstruct = bName.includes('instruct') ? 1 : 0;
+                
+                if (aInstruct !== bInstruct) return bInstruct - aInstruct;
+                return bName.localeCompare(aName); // Descending for version numbers
+            });
+
+            const bestQwen = qwenModels[0];
+
+            // 3. Define fallback chain (all must be vision)
+            const googleVision = availableModels.find(m => 
+                m.id.includes('google') && isFreeModel(m) && isVisionModel(m)
+            );
+            const mistralVision = availableModels.find(m => 
+                m.id.includes('mistral') && (m.id.includes('pixtral') || isVisionModel(m)) && isFreeModel(m)
+            );
+            const grokVision = availableModels.find(m => 
+                (m.id.includes('grok') || m.name?.toLowerCase().includes('grok')) && isFreeModel(m) && isVisionModel(m)
+            );
+
+            // 4. Update dropdowns
             [els.modSel, els.hwModSel, els.grModSel].forEach(sel => {
                 if(!sel.value || sel.value === "") {
-                    if(grokFree && !sel.querySelector(`option[value="${grokFree.id}"]`)?.disabled) sel.value = grokFree.id;
-                    else if(googleFlash && !sel.querySelector(`option[value="${googleFlash.id}"]`)?.disabled) sel.value = googleFlash.id;
-                    else sel.value = DEFAULT_MODEL;
+                    // Vision priority: Qwen > Google > Mistral > Grok
+                    const candidates = [bestQwen, googleVision, mistralVision, grokVision];
+                    let selected = false;
+                    
+                    for (const model of candidates) {
+                        if (model && !sel.querySelector(`option[value="${model.id}"]`)?.disabled) {
+                            sel.value = model.id;
+                            selected = true;
+                            break;
+                        }
+                    }
+                    
+                    // 5. If NO custom selection found, try one last time for any free vision model
+                    if (!selected) {
+                        const anyVision = availableModels.find(m => isFreeModel(m) && isVisionModel(m));
+                        if (anyVision) sel.value = anyVision.id;
+                        else sel.value = ""; // Placeholder
+                    }
                 }
             });
             checkBtnStates();
         }
 
         // --- API HELPERS ---
-        async function callApi(model, msgs, loadEl, resEl, cb) {
-            loadEl.style.display='block'; if(resEl) resEl.style.display='none';
+        // Store original loading element state for restoration
+        let _apiCallOriginalHTML = null;
+        let _apiCallOriginalClass = null;
+        
+        async function callApi(model, msgs, loadEl, resEl, cb, retryCount = 0) {
+            const MAX_RETRIES = 3;
+            
+            // Only capture original state on first call (retryCount === 0)
+            if (retryCount === 0) {
+                _apiCallOriginalHTML = loadEl.innerHTML;
+                _apiCallOriginalClass = loadEl.className;
+            }
+            
+            loadEl.style.display = 'block'; 
+            loadEl.className = 'loading';
+            if(resEl) resEl.style.display = 'none';
+            
             try {
                 const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method:'POST',
-                    headers: { 'Authorization': `Bearer ${els.apiKey.value}`, 'Content-Type':'application/json', 'HTTP-Referer': window.location.href },
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${els.apiKey.value}`, 
+                        'Content-Type': 'application/json', 
+                        'HTTP-Referer': window.location.href 
+                    },
                     body: JSON.stringify({ model, messages: msgs })
                 });
-                if(!r.ok) throw new Error(r.statusText);
+                
+                // Handle rate limiting with visual retry indicator
+                if (r.status === 429) {
+                    if (retryCount < MAX_RETRIES) {
+                        // Use fixed wait times that are predictable
+                        const waitTimes = [6, 12, 20]; // Seconds for each retry
+                        const waitTime = waitTimes[retryCount] || 10;
+                        
+                        console.warn(`Rate limited. Retrying in ${waitTime}s (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+                        
+                        // Unique ID to avoid conflicts
+                        const uniqueId = Date.now();
+                        
+                        // Show enhanced retry UI
+                        loadEl.className = 'loading retry-mode';
+                        loadEl.innerHTML = `
+                            <div class="retry-content">
+                                <span class="retry-icon">⏳</span>
+                                <span class="retry-text">Free models are busy! Please wait...</span>
+                                <span class="retry-countdown" id="retryCountdown${uniqueId}">${waitTime}s</span>
+                                <div class="retry-progress">
+                                    <div class="retry-progress-bar" id="retryProgressBar${uniqueId}" style="width: 100%"></div>
+                                </div>
+                                <span class="retry-attempt">Auto-retry ${retryCount + 1} of ${MAX_RETRIES}</span>
+                            </div>
+                        `;
+                        
+                        // Animate countdown with unique IDs
+                        const countdownEl = document.getElementById(`retryCountdown${uniqueId}`);
+                        const progressBar = document.getElementById(`retryProgressBar${uniqueId}`);
+                        
+                        for (let i = waitTime; i > 0; i--) {
+                            if (countdownEl) countdownEl.textContent = `${i}s`;
+                            if (progressBar) progressBar.style.width = `${(i / waitTime) * 100}%`;
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        }
+                        
+                        // Show "Retrying now..." briefly
+                        if (countdownEl) countdownEl.textContent = 'Retrying...';
+                        loadEl.className = 'loading';
+                        loadEl.innerHTML = _apiCallOriginalHTML || 'Processing...';
+                        
+                        // Small delay before retry to let UI update
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        
+                        return callApi(model, msgs, loadEl, resEl, cb, retryCount + 1);
+                    } else {
+                        throw new Error('Rate limit exceeded after 3 retries. Please wait a minute before trying again, or try a different model.');
+                    }
+                }
+                
+                if (!r.ok) {
+                    const errorData = await r.json().catch(() => ({}));
+                    const errorMsg = errorData.error?.message || r.statusText;
+                    throw new Error(errorMsg);
+                }
+                
                 const d = await r.json();
+                
+                if (!d.choices || !d.choices[0]) {
+                    throw new Error('Invalid response from API');
+                }
+                
                 cb(d.choices[0].message.content);
+                
             } catch(e) {
-                alert("Error: " + e.message);
-                failedModels.add(model);
-                updateAllDropdowns();
+                console.error('API Error:', e);
+                
+                // More helpful error messages
+                let userMessage = e.message;
+                if (e.message.includes('rate') || e.message.includes('429') || e.message.includes('retries')) {
+                    userMessage = 'Too many requests! Please wait 30-60 seconds before trying again.\n\nTip: Free models have stricter rate limits. This is normal - just wait a moment!';
+                } else if (e.message.includes('401') || e.message.includes('Unauthorized')) {
+                    userMessage = 'Invalid API key. Please check your OpenRouter API key.';
+                } else if (e.message.includes('insufficient') || e.message.includes('credits')) {
+                    userMessage = 'Insufficient credits. Try selecting a free model from the dropdown.';
+                }
+                
+                alert("Error: " + userMessage);
+                
+                // Only mark model as failed for non-rate-limit errors
+                if (!e.message.includes('rate') && !e.message.includes('429') && !e.message.includes('retries')) {
+                    failedModels.add(model);
+                    updateAllDropdowns();
+                }
             } finally {
-                loadEl.style.display='none'; if(resEl) resEl.style.display='block';
+                loadEl.style.display = 'none'; 
+                loadEl.className = _apiCallOriginalClass || 'loading';
+                loadEl.innerHTML = _apiCallOriginalHTML || '';
+                if(resEl) resEl.style.display = 'block';
                 checkBtnStates();
+                // Reset stored state
+                _apiCallOriginalHTML = null;
+                _apiCallOriginalClass = null;
             }
         }
 
@@ -924,13 +1117,131 @@
         setupCam(document.getElementById('hwCameraBtn'), document.getElementById('hwCameraContainer'), document.getElementById('hwCameraVideo'), 
                  document.getElementById('hwCaptureBtn'), document.getElementById('hwCancelCameraBtn'), els.hwPrev, els.hwIn, checkBtnStates);
 
-        // 2. Link Loader
-        els.loadUrlBtn.addEventListener('click', () => {
+        // 2. Link Loader - Fetches external images via proxy to avoid CORS/CORP issues
+        async function loadImageAsDataUrl(imageUrl) {
+            // Method 1: Try loading directly with crossOrigin (works for some CDNs)
+            try {
+                const dataUrl = await loadImageDirectly(imageUrl);
+                if (dataUrl) return dataUrl;
+            } catch (e) {
+                console.warn('Direct load failed:', e.message);
+            }
+
+            // Method 2: Try various CORS proxies
+            const corsProxies = [
+                (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+                (url) => `https://cors-proxy.htmldriven.com/?url=${encodeURIComponent(url)}`,
+            ];
+            
+            for (const proxyFn of corsProxies) {
+                try {
+                    const proxyUrl = proxyFn(imageUrl);
+                    const response = await fetch(proxyUrl, {
+                        headers: {
+                            'Accept': 'image/*,*/*'
+                        }
+                    });
+                    if (!response.ok) continue;
+                    
+                    const contentType = response.headers.get('content-type') || '';
+                    if (!contentType.includes('image') && !contentType.includes('octet-stream')) {
+                        continue; // Not an image response
+                    }
+                    
+                    const blob = await response.blob();
+                    if (blob.size < 1000) continue; // Too small, likely an error page
+                    
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (e) {
+                    console.warn(`Proxy failed: ${e.message}`);
+                    continue;
+                }
+            }
+            throw new Error('Unable to load image from URL.');
+        }
+
+        // Try to load image directly using crossOrigin attribute
+        function loadImageDirectly(imageUrl) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                const timeout = setTimeout(() => {
+                    reject(new Error('Image load timeout'));
+                }, 8000);
+                
+                img.onload = () => {
+                    clearTimeout(timeout);
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                        resolve(dataUrl);
+                    } catch (e) {
+                        reject(e);
+                    }
+                };
+                
+                img.onerror = () => {
+                    clearTimeout(timeout);
+                    reject(new Error('Failed to load image directly'));
+                };
+                
+                img.src = imageUrl;
+            });
+        }
+
+        els.loadUrlBtn.addEventListener('click', async () => {
             const url = els.urlIn.value.trim();
-            if(url) {
-                els.imgPrev.src = url;
+            if (!url) return;
+            
+            // Show loading state
+            els.loadUrlBtn.disabled = true;
+            els.loadUrlBtn.textContent = 'Loading...';
+            els.imgPrev.style.display = 'none';
+            
+            try {
+                // Check if it's already a data URL
+                if (url.startsWith('data:')) {
+                    els.imgPrev.src = url;
+                    els.imgPrev.style.display = 'block';
+                    generatePrompt();
+                    return;
+                }
+                
+                // Fetch and convert to data URL to bypass CORS/CORP
+                const dataUrl = await loadImageAsDataUrl(url);
+                els.imgPrev.src = dataUrl;
                 els.imgPrev.style.display = 'block';
                 generatePrompt();
+            } catch (e) {
+                console.error('Image load error:', e);
+                // Offer the screenshot workaround
+                const useScreenshot = confirm(
+                    'Could not load the external image due to security restrictions.\n\n' +
+                    'EASY WORKAROUND:\n' +
+                    '1. Open the image URL in a new browser tab\n' +
+                    '2. Click "Screenshot" button in this app\n' +
+                    '3. Select the browser tab with the image\n\n' +
+                    'Click OK to copy the URL to clipboard, or Cancel to try a different image.'
+                );
+                if (useScreenshot) {
+                    navigator.clipboard.writeText(url).then(() => {
+                        alert('URL copied! Open it in a new tab, then use the Screenshot button.');
+                    }).catch(() => {});
+                }
+            } finally {
+                els.loadUrlBtn.disabled = false;
+                els.loadUrlBtn.textContent = 'Load Link';
             }
         });
 
