@@ -750,14 +750,19 @@
             active.classList.add('active');
         }
 
-        // --- THEME LOGIC ---
-        els.theme.addEventListener('change', (e) => {
-            const t = e.target.value;
+        function applyTheme(t) {
             document.body.setAttribute('data-theme', t);
             els.title.textContent = themeConfig[t].title;
             els.next.textContent = currentStep === 4 ? "Finish" : themeConfig[t].btnNext;
             els.gradeBtn.textContent = themeConfig[t].btnGrade;
             if(els.modal.style.display === 'block') updateHelpText(t);
+        }
+
+        // --- THEME LOGIC ---
+        els.theme.addEventListener('change', (e) => {
+            const t = e.target.value;
+            applyTheme(t);
+            localStorage.setItem('selected_theme', t);
         });
 
         // --- NAVIGATION ---
@@ -1578,6 +1583,12 @@ Please evaluate the student's writing thoroughly and provide constructive feedba
         
         [els.visTog, els.provSel, els.hwProvSel, els.grProvSel].forEach(el => el.addEventListener('change', updateAllDropdowns));
         
+        const savedTheme = localStorage.getItem('selected_theme');
+        if (savedTheme && themeConfig[savedTheme]) {
+            els.theme.value = savedTheme;
+            applyTheme(savedTheme);
+        }
+
         if(localStorage.getItem('or_key')) {
             els.apiKey.value = localStorage.getItem('or_key');
             document.getElementById('validateApiKeyBtn').click();
